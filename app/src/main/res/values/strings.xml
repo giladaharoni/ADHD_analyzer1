@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">ADHD_analyzer</string>
     <string name="hi">Hey, =name=</string>
+    <string name="clktotrk">Click here for tracking</string>
+    <string name="rsmtrck">Resume tracking</string>
+    <string name="urtrck">You are now tracked</string>
+    <string name="privacy">Privacy</string>
+    <string name="updteperonaldetails">Update personal details</string>
+    <string name="usnmeupdte">Update username</string>
+    <string name="updtepsword">Update password</string>
 </resources>
