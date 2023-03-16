@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ADHD_analyzer</string>
+    <string name="hi">Hey, =name=</string>
 </resources>

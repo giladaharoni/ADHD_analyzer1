@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@drawable/main_bullet_shape"
+    android:layout_margin="5dp"
+    android:elevation="8dp">
+    <LinearLayout
+        android:minWidth="300dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="15sp">
+        <TextView
+            android:id="@+id/bullet_text2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="\u25A0"
+            android:textColor="@color/black"
+            android:layout_margin="1sp"/>
+        <TextView
+            android:id="@+id/bullet_text"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:text="bullet_text"
+            android:layout_marginEnd="30dp"
+            android:textColor="@color/black"
+            android:layout_margin="2sp"/>
+    </LinearLayout>
+
+</LinearLayout>
