@@ -4,15 +4,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#A08FBC"
     tools:context=".MainActivity">
+
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:fontFamily="cursive"
+        android:gravity="center"
+        android:paddingLeft="20dp"
+        android:shadowColor="#F8F6FA"
+        android:text="wellcome to ADHD analyzer application!"
+        android:textColor="#35384A"
+        android:textSize="64dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LOGIN"
+        tools:layout_editor_absoluteX="161dp"
+        tools:layout_editor_absoluteY="526dp"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/button_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="REGISTER"
+        tools:layout_editor_absoluteX="161dp"
+        tools:layout_editor_absoluteY="594dp"
+        tools:ignore="MissingConstraints" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
