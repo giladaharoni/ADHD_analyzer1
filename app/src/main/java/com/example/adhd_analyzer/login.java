@@ -40,5 +40,15 @@ public class login extends AppCompatActivity {
                 }
             }
         });
+
+        //back button
+        Button back_button = findViewById(R.id.back_from_login_button);
+        back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(login.this ,MainActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

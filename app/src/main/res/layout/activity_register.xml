@@ -5,11 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#A4308738"
-    tools:context=".login">
-
+    tools:context=".activity_register">
 
     <Button
-        android:id="@+id/back_from_login_button"
+        android:id="@+id/back_from_register_button"
         android:layout_width="147dp"
         android:layout_height="50dp"
         android:background="#3B1FAC52"
@@ -45,12 +44,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#3B1FAC52"
-            android:text="Login"
+            android:text="Register"
             android:textSize="32dp"
             tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="461dp"/>
-
+            tools:layout_editor_absoluteY="461dp" />
     </LinearLayout>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
