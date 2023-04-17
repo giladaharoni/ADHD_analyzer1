@@ -29,6 +29,10 @@ public class login extends AppCompatActivity {
             public void onClick(View view) {
                 String username = mUsernameEditText.getText().toString();
                 String password = mPasswordEditText.getText().toString();
+                //this is just for see the next page without logic
+                Intent intent = new Intent(login.this, home.class);
+                startActivity(intent);
+                /*
                 if (username.equals("admin") && password.equals("password")) {
                     // Login success, go to home activity
                     Intent intent = new Intent(login.this, MainActivity.class);
@@ -38,6 +42,7 @@ public class login extends AppCompatActivity {
                     // Login failed, show error message
                     Toast.makeText(login.this, "Invalid username or password", Toast.LENGTH_SHORT).show();
                 }
+                 */
             }
         });
 
@@ -50,5 +55,16 @@ public class login extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        /*
+        //login button
+        Button login_button = findViewById(R.id.login_button);
+        back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(login.this ,home.class);
+                startActivity(intent);
+            }
+        });
+         */
     }
 }
