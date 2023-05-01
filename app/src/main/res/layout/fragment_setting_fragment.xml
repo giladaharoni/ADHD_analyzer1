@@ -7,9 +7,127 @@
     android:background="@color/background">
 
     <!-- TODO: Update blank fragment layout -->
+
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="setting frag" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:fontFamily="@font/belleza"
+        android:text="settings"
+        android:textColor="@color/text2"
+        android:textSize="32dp" />
 
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="50dp"
+        android:layout_marginTop="100dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:fontFamily="@font/belleza"
+            android:text="change your password"
+            android:textColor="@color/myButtonColor"
+            android:textSize="22dp" />
+        <EditText
+            android:id="@+id/change_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:fontFamily="@font/belleza"
+            android:textSize="22dp" />
+        <EditText
+            android:id="@+id/change_password_verify"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Verify Password"
+            android:fontFamily="@font/belleza"
+            android:inputType="textPassword"
+            android:textSize="22dp" />
+        <Button
+            android:id="@+id/ok_change_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/myButtonColor"
+            android:text="ok"
+            android:textColor="@color/text"
+            android:fontFamily="@font/belleza"
+            android:textSize="22dp"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="461dp"
+             android:layout_gravity="end"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:fontFamily="@font/belleza"
+            android:text="change your username"
+            android:textColor="@color/myButtonColor"
+            android:textSize="22dp" />
+        <EditText
+            android:id="@+id/change_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Username"
+            android:fontFamily="@font/belleza"
+            android:textSize="22dp" />
+        <Button
+            android:id="@+id/ok_change_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/myButtonColor"
+            android:text="ok"
+            android:textColor="@color/text"
+            android:fontFamily="@font/belleza"
+            android:textSize="22dp"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="461dp"
+            android:layout_gravity="end"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:fontFamily="@font/belleza"
+            android:text="change your full name for the report"
+            android:textColor="@color/myButtonColor"
+            android:textSize="22dp" />
+        <EditText
+            android:id="@+id/change_FULLname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Fullname"
+            android:fontFamily="@font/belleza"
+            android:textSize="22dp" />
+        <Button
+            android:id="@+id/ok_change_Fullname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/myButtonColor"
+            android:text="ok"
+            android:textColor="@color/text"
+            android:fontFamily="@font/belleza"
+            android:textSize="22dp"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="461dp"
+            android:layout_gravity="end"/>
+        <Button
+            android:id="@+id/logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/myButtonColor"
+            android:text="Logout"
+            android:textColor="@color/text"
+            android:fontFamily="@font/belleza"
+            android:textSize="22dp"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="461dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="120dp"/>
+    </LinearLayout>
 </FrameLayout>

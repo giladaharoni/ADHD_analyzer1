@@ -27,21 +27,36 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="50dp">
 
-        <EditText
-            android:id="@+id/password_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Password"
-            android:fontFamily="@font/belleza"
-            android:inputType="textPassword"
-            android:textSize="32dp" />
+
 
         <EditText
-            android:id="@+id/username_edit_text"
+            android:id="@+id/username_edit_text_full_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Full Name"
+            android:fontFamily="@font/belleza"
+            android:textSize="32dp" />
+        <EditText
+            android:id="@+id/username_edit_text_user_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Username"
             android:fontFamily="@font/belleza"
+            android:textSize="32dp" />
+        <EditText
+            android:id="@+id/username_edit_text_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:fontFamily="@font/belleza"
+            android:textSize="32dp" />
+        <EditText
+            android:id="@+id/password_edit_text_new_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Verify Password"
+            android:fontFamily="@font/belleza"
+            android:inputType="textPassword"
             android:textSize="32dp" />
         <Button
             android:id="@+id/login_button"
