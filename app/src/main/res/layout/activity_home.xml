@@ -42,7 +42,7 @@
             android:layout_margin="30dp"
             android:background="@drawable/circular_button_background"
             android:padding="15dp"
-            android:text="Start Trucking"
+            android:text="Start Tracking"
             android:textSize="32dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

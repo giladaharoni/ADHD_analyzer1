@@ -14,12 +14,26 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.adhd_analyzer.logger_sensors.SensorsRecordsService;
+
 public class home extends AppCompatActivity {
+    boolean isTracked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        isTracked = false;
+        Button startTrack = findViewById(R.id.truck_button);
+        startTrack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!isTracked){
+                    startService(new Intent(view.getContext(),SensorsRecordsService.class));
+                }
+
+            }
+        });
 
     }
 
