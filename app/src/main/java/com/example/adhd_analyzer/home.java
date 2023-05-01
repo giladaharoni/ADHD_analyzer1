@@ -20,26 +20,14 @@ public class home extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-/*
-        // Set the Toolbar as the action bar
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        // Add a button to open the menu
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.circular_button_background);
-
- */
-        /*
-        Button register_button = findViewById(R.id.truck_button);
-        register_button.setOnClickListener(new View.OnClickListener() {
+        Button menuButton = findViewById(R.id.menu_button);
+        menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent2 = new Intent(MainActivity.this,activity_register.class);
-                startActivity(intent2);
+            public void onClick(View view) {
+                openOptionsMenu();
             }
         });
-         */
+        invalidateOptionsMenu();
     }
 
     @Override

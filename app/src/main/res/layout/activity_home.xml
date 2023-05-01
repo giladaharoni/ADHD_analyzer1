@@ -45,6 +45,13 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0" />
 
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/menu_button"
+            android:drawableBottom="@drawable/ic_menu"
+            tools:ignore="MissingConstraints" />
+
 
 
         <com.google.android.material.navigation.NavigationView

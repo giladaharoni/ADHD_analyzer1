@@ -3,4 +3,6 @@
     <string name="wellcome_to_adhd_analyzer_application">wellcome to ADHD analyzer application!</string>
     <string name="login">LOGIN</string>
     <string name="register">REGISTER</string>
+    <string name="navigation_drawer_open">Open Navigation Drawer</string>
+    <string name="navigation_drawer_close">Close Navigation Drawer</string>
 </resources>
