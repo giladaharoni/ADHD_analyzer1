@@ -16,6 +16,7 @@ import android.os.IBinder;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.room.Room;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -30,7 +31,10 @@ public class SensorsRecordsService extends Service implements SensorEventListene
     private BufferedWriter csvWriter;
     private float[] accelerometerData;
     private float[] gyroscopeData;
+    private float[] magnetometerData;
     private Date startTime;
+    private SensorsDB db;
+    private SensorLogDao logDao;
 
     private File csvFile;
 
@@ -46,13 +50,15 @@ public class SensorsRecordsService extends Service implements SensorEventListene
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometerData = new float[3];
         gyroscopeData = new float[3];
+        magnetometerData = new float[3];
 
         // Register sensors
         Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         Sensor gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        Sensor magnetometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         sensorManager.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
         sensorManager.registerListener(this, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
-
+        sensorManager.registerListener(this,magnetometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
         // Initialize location manager
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -69,6 +75,8 @@ public class SensorsRecordsService extends Service implements SensorEventListene
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
 
+        db = Room.databaseBuilder(getApplicationContext(),SensorsDB.class,"sensorsDB").allowMainThreadQueries().build();
+        logDao = db.sensorLogDao();
         // Create CSV file
         csvFile = new File(getExternalFilesDir(null), "sensor_data.csv");
         try {
@@ -97,6 +105,8 @@ public class SensorsRecordsService extends Service implements SensorEventListene
             accelerometerData = event.values.clone();
         } else if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
             gyroscopeData = event.values.clone();
+        } else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+            magnetometerData = event.values.clone();
         }
 
         // Check if we have GPS data
@@ -113,16 +123,21 @@ public class SensorsRecordsService extends Service implements SensorEventListene
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (location != null) {
             // Format sensor data as CSV
-            String timestamp = Long.toString(System.currentTimeMillis());
-            String accelerometerX = Float.toString(accelerometerData[0]);
-            String accelerometerY = Float.toString(accelerometerData[1]);
-            String accelerometerZ = Float.toString(accelerometerData[2]);
-            String gyroscopeX = Float.toString(gyroscopeData[0]);
-            String gyroscopeY = Float.toString(gyroscopeData[1]);
-            String gyroscopeZ = Float.toString(gyroscopeData[2]);
-            String latitude = Double.toString(location.getLatitude());
-            String longitude = Double.toString(location.getLongitude());
-            String altitude = Double.toString(location.getAltitude());
+            long timestamp = System.currentTimeMillis();
+            float accelerometerX = accelerometerData[0];
+            float accelerometerY = accelerometerData[1];
+            float accelerometerZ = accelerometerData[2];
+            float gyroscopeX = gyroscopeData[0];
+            float gyroscopeY = gyroscopeData[1];
+            float gyroscopeZ = gyroscopeData[2];
+            float magnetometerX = magnetometerData[0];
+            float magnetometerY = magnetometerData[1];
+            float magnetometerZ = magnetometerData[2];
+            double latitude = location.getLatitude();
+            double longitude = location.getLongitude();
+            double altitude = location.getAltitude();
+            SensorLog log = new SensorLog(timestamp ,accelerometerX ,accelerometerY , accelerometerZ,gyroscopeX,gyroscopeY,gyroscopeZ,magnetometerX,magnetometerY,magnetometerZ,latitude,longitude,altitude);
+            logDao.insert(log);
 
             String csvLine = timestamp + "," + accelerometerX + "," + accelerometerY + "," + accelerometerZ + "," + gyroscopeX + "," + gyroscopeY + "," + gyroscopeZ + "," + latitude + "," + longitude + "," + altitude + "\n";
 
@@ -137,7 +152,6 @@ public class SensorsRecordsService extends Service implements SensorEventListene
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
-
     }
 
     public void onDestroy() {
@@ -157,6 +171,7 @@ public class SensorsRecordsService extends Service implements SensorEventListene
     public void onLocationChanged(@NonNull Location location) {
 
     }
+
 
     public String getCsvFilePath() {
         // Return the file path
