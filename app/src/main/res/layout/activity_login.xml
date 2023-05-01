@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#A4308738"
+    android:background="@color/background"
     tools:context=".login">
 
 
@@ -12,9 +12,10 @@
         android:id="@+id/back_from_login_button"
         android:layout_width="147dp"
         android:layout_height="50dp"
-        android:background="#3B1FAC52"
+        android:background="@color/myButtonColor"
         android:text="Back"
         android:textSize="20dp"
+        android:textColor="@color/text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -31,6 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password"
+            android:fontFamily="@font/belleza"
             android:inputType="textPassword"
             android:textSize="32dp" />
 
@@ -39,13 +41,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Username"
+            android:fontFamily="@font/belleza"
             android:textSize="32dp" />
         <Button
             android:id="@+id/login_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#3B1FAC52"
+            android:background="@color/myButtonColor"
             android:text="Login"
+            android:textColor="@color/text"
+            android:fontFamily="@font/belleza"
             android:textSize="32dp"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="461dp"/>

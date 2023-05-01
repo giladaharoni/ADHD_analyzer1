@@ -6,7 +6,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#A4308738"
+    android:background="@color/background"
     tools:context=".home">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,11 +28,13 @@
             android:id="@+id/bottomNavigationView"
             android:layout_height="50dp"
             app:labelVisibilityMode="labeled"
-            android:background="#708193"
+            android:background="@color/myButtonColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
+            app:itemTextColor="@color/text"
+            app:itemIconTint="@color/text"
             app:menu="@menu/bottom_nav_menu" />
 
         <Button
@@ -41,14 +43,16 @@
             android:layout_height="300dp"
             android:layout_margin="30dp"
             android:background="@drawable/circular_button_background"
+            android:fontFamily="@font/amiko"
             android:padding="15dp"
-            android:text="Start Trucking"
+            android:text="Start Tracking"
+            android:textColor="@color/text"
             android:textSize="32dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintVertical_bias="0.5" />
 
         <TextView
@@ -56,8 +60,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="16dp"
-            android:fontFamily="serif"
             android:text="hello *username*!"
+            android:fontFamily="@font/belleza"
             android:textSize="25dp"
             app:layout_constraintBottom_toTopOf="@id/truck_button"
             app:layout_constraintEnd_toEndOf="parent"

@@ -4,15 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#A4308738"
+    android:background="@color/background"
     tools:context=".activity_register">
 
     <Button
         android:id="@+id/back_from_register_button"
         android:layout_width="147dp"
         android:layout_height="50dp"
-        android:background="#3B1FAC52"
+        android:background="@color/myButtonColor"
         android:text="Back"
+        android:textColor="@color/text"
+        android:fontFamily="@font/belleza"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -30,6 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password"
+            android:fontFamily="@font/belleza"
             android:inputType="textPassword"
             android:textSize="32dp" />
 
@@ -38,13 +41,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Username"
+            android:fontFamily="@font/belleza"
             android:textSize="32dp" />
         <Button
             android:id="@+id/login_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#3B1FAC52"
+            android:background="@color/myButtonColor"
             android:text="Register"
+            android:textColor="@color/text"
+            android:fontFamily="@font/belleza"
             android:textSize="32dp"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="461dp" />
