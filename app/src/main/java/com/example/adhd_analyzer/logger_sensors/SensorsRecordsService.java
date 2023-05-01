@@ -16,6 +16,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
@@ -23,6 +24,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.room.Room;
 
 import com.example.adhd_analyzer.R;
@@ -35,6 +37,10 @@ import java.util.Date;
 
 public class SensorsRecordsService extends Service implements SensorEventListener, LocationListener {
 
+    private static final int NOTIFICATION_ID = 1;
+    private static final int DELAY_IN_MILLIS = 2 * 60 * 1000; // 23 minutes
+    private Handler handler;
+    private Runnable removeNotificationRunnable;
 
     private static final String CHANNEL_ID = "bgfhghfd";
     private SensorManager sensorManager;
@@ -53,7 +59,18 @@ public class SensorsRecordsService extends Service implements SensorEventListene
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent, flags, startId);
+        super.onStartCommand(intent, flags, startId);
+        startForeground(NOTIFICATION_ID, createNotification());
+        removeNotificationRunnable = new Runnable() {
+            @Override
+            public void run() {
+                removeNotification();
+            }
+        };
+        handler = new Handler();
+        handler.postDelayed(removeNotificationRunnable, DELAY_IN_MILLIS);
+
+        return START_STICKY;
     }
 
 
@@ -168,8 +185,36 @@ public class SensorsRecordsService extends Service implements SensorEventListene
     public void onAccuracyChanged(Sensor sensor, int i) {
     }
 
+    private Notification createNotification() {
+        // Customize the notification according to your needs
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentTitle("Permanent Notification")
+                .setContentText("This notification cannot be removed.")
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setOngoing(true);
+
+        return builder.build();
+    }
+
+    private void removeNotification() {
+        // Cancel the existing notification
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.cancel(NOTIFICATION_ID);
+
+        // Create and display a new notification
+        Notification newNotification = createNotification();
+        notificationManager.notify(NOTIFICATION_ID, newNotification);
+
+        // Schedule the removal of the new notification after the specified delay
+        handler.postDelayed(removeNotificationRunnable, DELAY_IN_MILLIS);
+    }
+
     public void onDestroy() {
         super.onDestroy();
+        if (handler != null && removeNotificationRunnable != null) {
+            handler.removeCallbacks(removeNotificationRunnable);
+        }
 
         // Stop recording
         sensorManager.unregisterListener(this);
