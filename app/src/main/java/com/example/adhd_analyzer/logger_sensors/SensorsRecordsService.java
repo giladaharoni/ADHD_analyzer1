@@ -98,8 +98,6 @@ public class SensorsRecordsService extends Service implements SensorEventListene
 
         // Register location updates
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
             //                                          int[] grantResults)
@@ -132,58 +130,6 @@ public class SensorsRecordsService extends Service implements SensorEventListene
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        Date now = new Date();
-        if (now.getTime()-startTime.getTime()>1000*60*60*24){
-            return;
-        }
-        // Record sensor data
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            accelerometerData = event.values.clone();
-        } else if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-            gyroscopeData = event.values.clone();
-        } else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-            magnetometerData = event.values.clone();
-        }
-
-
-        // Check if we have GPS data
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if (location != null) {
-            // Format sensor data as CSV
-            long timestamp = System.currentTimeMillis();
-            float accelerometerX = accelerometerData[0];
-            float accelerometerY = accelerometerData[1];
-            float accelerometerZ = accelerometerData[2];
-            float gyroscopeX = gyroscopeData[0];
-            float gyroscopeY = gyroscopeData[1];
-            float gyroscopeZ = gyroscopeData[2];
-            float magnetometerX = magnetometerData[0];
-            float magnetometerY = magnetometerData[1];
-            float magnetometerZ = magnetometerData[2];
-            double latitude = location.getLatitude();
-            double longitude = location.getLongitude();
-            double altitude = location.getAltitude();
-            SensorLog log = new SensorLog(timestamp ,accelerometerX ,accelerometerY , accelerometerZ,gyroscopeX,gyroscopeY,gyroscopeZ,magnetometerX,magnetometerY,magnetometerZ,latitude,longitude,altitude);
-            logDao.insert(log);
-
-        }
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
-    }
 
     private Notification createNotification() {
         // Customize the notification according to your needs
@@ -222,9 +168,19 @@ public class SensorsRecordsService extends Service implements SensorEventListene
 
     }
 
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
+    }
+
     @Override
     public void onLocationChanged(@NonNull Location location) {
 
     }
-
 }
