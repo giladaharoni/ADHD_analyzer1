@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#A4308738"
+    android:background="@color/background"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -17,12 +17,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="100dp"
-            android:fontFamily="cursive"
+            android:fontFamily="@font/belleza"
             android:gravity="center"
             android:shadowColor="#F8F6FA"
-            android:text="@string/wellcome_to_adhd_analyzer_application"
-            android:textColor="#35384A"
-            android:textSize="64sp"
+            android:text="ADHD
+            analyzer
+            application"
+            android:textColor="@color/text2"
+            android:textSize="45sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -35,9 +37,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="50dp"
-            android:background="#3B1FAC52"
-            android:fontFamily="casual"
+            android:background="@color/myButtonColor"
+            android:fontFamily="@font/belleza"
             android:text="@string/login"
+            android:textColor="@color/text"
             android:textSize="28dp"
             app:layout_constraintTop_toBottomOf="@+id/textView"
             tools:layout_editor_absoluteX="161dp" />
@@ -47,13 +50,24 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="#3B1FAC52"
-            android:fontFamily="casual"
+            android:background="@color/myButtonColor"
+            android:fontFamily="@font/belleza"
             android:text="@string/register"
+            android:textColor="@color/text"
             android:textSize="28dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/button_login"
             tools:layout_editor_absoluteX="161dp" />
+
+        <ImageView
+            android:id="@+id/ic_man_"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription=""
+            android:layout_marginTop="100dp"
+            android:src="@drawable/ic_man_foreground" />
+
     </LinearLayout>
 
 
