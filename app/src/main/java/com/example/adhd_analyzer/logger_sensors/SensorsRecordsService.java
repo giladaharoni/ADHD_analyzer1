@@ -1,9 +1,12 @@
 package com.example.adhd_analyzer.logger_sensors;
 
+import static android.content.ContentValues.TAG;
+
 import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -15,11 +18,13 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -28,6 +33,7 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.room.Room;
 
 import com.example.adhd_analyzer.R;
+import com.example.adhd_analyzer.home;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -51,8 +57,8 @@ public class SensorsRecordsService extends Service implements SensorEventListene
     private Date startTime;
     private SensorsDB db;
     private SensorLogDao logDao;
+    private LogBinder logBinder = new LogBinder();
 
-    private File csvFile;
 
     public SensorsRecordsService() {
     }
@@ -60,15 +66,6 @@ public class SensorsRecordsService extends Service implements SensorEventListene
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        startForeground(NOTIFICATION_ID, createNotification());
-        removeNotificationRunnable = new Runnable() {
-            @Override
-            public void run() {
-                removeNotification();
-            }
-        };
-        handler = new Handler();
-        handler.postDelayed(removeNotificationRunnable, DELAY_IN_MILLIS);
 
         return START_STICKY;
     }
@@ -98,24 +95,13 @@ public class SensorsRecordsService extends Service implements SensorEventListene
 
         // Register location updates
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+            Toast.makeText(this, "please enable permissions", Toast.LENGTH_SHORT).show();
             return;
+        } else {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    CHANNEL_ID,
-                    "Background Service",
-                    NotificationManager.IMPORTANCE_LOW
-            );
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
-        }
+
 
         db = Room.databaseBuilder(getApplicationContext(),SensorsDB.class,"sensorsDB").allowMainThreadQueries().build();
         logDao = db.sensorLogDao();
@@ -124,10 +110,13 @@ public class SensorsRecordsService extends Service implements SensorEventListene
 
     }
 
+    public class LogBinder extends Binder{
+
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
+        return logBinder;
     }
 
 
@@ -139,6 +128,7 @@ public class SensorsRecordsService extends Service implements SensorEventListene
                 .setContentText("This notification cannot be removed.")
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setOngoing(true);
+
 
         return builder.build();
     }

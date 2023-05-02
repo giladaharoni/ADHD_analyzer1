@@ -7,6 +7,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.adhd_analyzer.logger_sensors.SensorsRecordsService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class home extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -71,6 +74,8 @@ public class home extends AppCompatActivity implements BottomNavigationView.OnNa
         }
         return false;
     }
+
+
 
 //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {

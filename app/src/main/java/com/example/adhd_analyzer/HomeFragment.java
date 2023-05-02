@@ -1,12 +1,25 @@
 package com.example.adhd_analyzer;
 
+import android.app.ActivityManager;
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import com.example.adhd_analyzer.logger_sensors.SensorsRecordsService;
+import com.example.adhd_analyzer.viewmodels.ButtonStateViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,7 +71,45 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view =inflater.inflate(R.layout.fragment_home, container, false);
+        Button tracking = view.findViewById(R.id.truck_button);
+        ButtonStateViewModel  buttonStateViewModel= new ViewModelProvider(this).get(ButtonStateViewModel.class);
+        buttonStateViewModel.getButtonClickableState().observe(this.getActivity(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isClickable) {
+                tracking.setEnabled(isClickable);
+            }
+        });
+        tracking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isMyServiceRunning(SensorsRecordsService.class)){
+                    getActivity().stopService(new Intent(view.getContext(),SensorsRecordsService.class));
+                    tracking.setText(R.string.start_tracking);
+
+                } else{
+                    getActivity().startService(new Intent(view.getContext(), SensorsRecordsService.class));
+                    tracking.setText(R.string.stop_tracking);
+                    buttonStateViewModel.setButtonClickableState(false);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            buttonStateViewModel.setButtonClickableState(true);
+                        }
+                    },10*1000);
+                }
+            }
+        });
+        return view;
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
