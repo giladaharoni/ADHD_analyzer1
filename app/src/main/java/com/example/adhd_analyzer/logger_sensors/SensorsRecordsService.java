@@ -32,6 +32,9 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.room.Room;
 
+import com.chaquo.python.PyObject;
+import com.chaquo.python.Python;
+import com.chaquo.python.android.AndroidPlatform;
 import com.example.adhd_analyzer.R;
 import com.example.adhd_analyzer.home;
 
@@ -39,7 +42,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.Date;
+import java.util.List;
 
 public class SensorsRecordsService extends Service implements SensorEventListener, LocationListener {
 
@@ -66,6 +71,24 @@ public class SensorsRecordsService extends Service implements SensorEventListene
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
+        handler = new Handler();
+        Context context = getApplicationContext();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                List<SensorLog> logList = logDao.index();
+                if (! Python.isStarted()){
+                    Python.start(new AndroidPlatform(context));
+                }
+                Python py =Python.getInstance();
+                PyObject pyObject = py.getModule("data_process").callAttr("process",logList);
+                ProcessedDataDB dataDB = ModuleDB.getProcessedDB(context);
+                processedDataDao dataDao = dataDB.processedDataDao();
+                dataDao.insertList(ProcessedData.convertToProcessData(pyObject));
+
+            }
+        },DELAY_IN_MILLIS);
+
 
         return START_STICKY;
     }

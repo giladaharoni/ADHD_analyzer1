@@ -75,48 +75,4 @@ public class home extends AppCompatActivity implements BottomNavigationView.OnNa
         return false;
     }
 
-
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.bottomNavigationView:
-//                // Show the popup menu
-//                View view = findViewById(R.id.bottomNavigationView);
-//                PopupMenu popupMenu = new PopupMenu(this, view);
-//                popupMenu.getMenuInflater().inflate(R.menu.navigation_menu, popupMenu.getMenu());
-//                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//                    @Override
-//                    public boolean onMenuItemClick(MenuItem item) {
-//                        // Handle menu item click
-//                        return true;
-//                    }
-//                });
-//                popupMenu.show();
-//                return true;
-//            case R.id.item0:
-//                Toast.makeText(this, "item 0 selected", Toast.LENGTH_SHORT);
-//                Intent intent0 = new Intent(home.this, home.class);
-//                startActivity(intent0);
-//                return true;
-//            case R.id.item1:
-//                Toast.makeText(this, "item 1 selected", Toast.LENGTH_SHORT);
-//                Intent intent1 = new Intent(home.this, reports.class);
-//                startActivity(intent1);
-//                return true;
-//            case R.id.item2:
-//                Toast.makeText(this, "item 2 selected", Toast.LENGTH_SHORT);
-//                Intent intent2 = new Intent(home.this, setting.class);
-//                startActivity(intent2);
-//                return true;
-//            case R.id.item3:
-//                Toast.makeText(this, "item 3 selected", Toast.LENGTH_SHORT);
-//                Intent intent3 = new Intent(home.this, quiz.class);
-//                startActivity(intent3);
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//
-//    }
 }
