@@ -15,12 +15,15 @@ import android.widget.TextView;
  * Use the {@link QuizFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class QuizFragment extends Fragment {
+public class QuizFragment extends Fragment implements View.OnClickListener{
 
     TextView totalQuestionsTextView;
     TextView questionTextView;
     Button ansA, ansB, ansC, ansD;
     Button submit;
+    int totalQuestions = QuestionAnswer.question.length;
+    int currentQuestionIndex = 0;
+    String selectedAnswer = "";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -71,6 +74,32 @@ public class QuizFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_quiz_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_quiz_fragment, container, false);
+        totalQuestionsTextView = view.findViewById(R.id.total);
+        questionTextView = view.findViewById(R.id.question);
+        ansA = view.findViewById(R.id.Ans_never);
+        ansB = view.findViewById(R.id.Ans_rarely);
+        ansC = view.findViewById(R.id.Ans_often);
+        ansD = view.findViewById(R.id.Ans_very_often);
+        submit = view.findViewById(R.id.Submit);
+        ansA.setOnClickListener(this);
+        ansB.setOnClickListener(this);
+        ansC.setOnClickListener(this);
+        ansD.setOnClickListener(this);
+        submit.setOnClickListener(this);
+        totalQuestionsTextView.setText("Total questions :" + totalQuestions);
+        loadNewQuestions();
+
+
+        return view;
+    }
+
+    private void loadNewQuestions() {
+        questionTextView.setText(QuestionAnswer.question[currentQuestionIndex]);
+    }
+
+    @Override
+    public void onClick(View view) {
+
     }
 }
