@@ -9,7 +9,100 @@
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="quiz frag" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:fontFamily="@font/belleza"
+        android:text="Quiz"
+        android:textColor="@color/text2"
+        android:textSize="32dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total Question"
+        android:layout_centerHorisontal="true"
+        android:textSize="20dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="90dp"
+        android:textColor="@color/text2"
+        android:fontFamily="@font/belleza"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layot_centerInParent="true"
+        android:orientation="vertical"
+        android:layout_marginTop="200dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Question"
+            android:textSize="20dp"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/text2"
+            android:fontFamily="@font/belleza"
+            />
+
+        <Button
+            android:id="@+id/Ans_never"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@color/myButtonColor"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/belleza"
+            android:text="Never"
+            android:textColor="@color/text" />
+
+        <Button
+            android:id="@+id/Ans_rarely"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:backgroundTint="@color/white"
+            android:text="Rarely"
+            android:background="@color/myButtonColor"
+            android:textColor="@color/text"
+            android:fontFamily="@font/belleza"/>
+
+        <Button
+            android:id="@+id/Ans_often"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:backgroundTint="@color/white"
+            android:text="Often"
+            android:background="@color/myButtonColor"
+            android:textColor="@color/text"
+            android:fontFamily="@font/belleza"/>
+
+        <Button
+            android:id="@+id/Ans_very_often"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:backgroundTint="@color/white"
+            android:text="Very often"
+            android:background="@color/myButtonColor"
+            android:textColor="@color/text"
+            android:fontFamily="@font/belleza"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layot_centerInParent="true"
+        android:orientation="vertical"
+        android:layout_marginTop="500dp">
+
+        <Button
+            android:id="@+id/Submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="#FF0F6110"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/belleza"
+            android:text="Submit"
+            android:textColor="@color/text" />
+    </LinearLayout>
 </FrameLayout>
