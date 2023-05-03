@@ -8,5 +8,7 @@ public class QuestionAnswer {
             "4hjfdfhgklgfj",
             "5 I am lazy"
     };
-
+    public static String answers[] = {
+            "", "", "", ""
+    };
 }

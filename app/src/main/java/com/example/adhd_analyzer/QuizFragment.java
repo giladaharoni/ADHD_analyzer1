@@ -1,5 +1,7 @@
 package com.example.adhd_analyzer;
 
+import android.app.AlertDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -96,10 +98,37 @@ public class QuizFragment extends Fragment implements View.OnClickListener{
 
     private void loadNewQuestions() {
         questionTextView.setText(QuestionAnswer.question[currentQuestionIndex]);
+        if(currentQuestionIndex == totalQuestions){
+            finishQuiz();
+            return;
+        }
+    }
+
+    private void finishQuiz() {
+        String passStatus = "Finish message";
+        new AlertDialog.Builder(this.getContext())
+                .setTitle(passStatus)
+                .setMessage("Finish All The Questions!")
+                .show();
     }
 
     @Override
     public void onClick(View view) {
+        ansA.setBackgroundColor(Color.DKGRAY);
+        ansB.setBackgroundColor(Color.DKGRAY);
+        ansC.setBackgroundColor(Color.DKGRAY);
+        ansD.setBackgroundColor(Color.DKGRAY);
 
+        Button clickedButton = (Button) view;
+        if(clickedButton.getId() == R.id.Submit){
+            QuestionAnswer.answers[currentQuestionIndex] = selectedAnswer;
+            currentQuestionIndex++;
+            loadNewQuestions();
+
+        } else{
+            //choise button clicked
+            selectedAnswer = clickedButton.getText().toString();
+            clickedButton.setBackgroundColor(Color.BLACK);
+        }
     }
 }
