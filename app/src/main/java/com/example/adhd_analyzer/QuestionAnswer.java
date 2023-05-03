@@ -9,6 +9,6 @@ public class QuestionAnswer {
             "5 I am lazy"
     };
     public static String answers[] = {
-            "", "", "", ""
+            "", "", "", "", ""
     };
 }
