@@ -11,10 +11,10 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/belleza"
-        android:text="No reports yet.."
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="300dp"
+        android:fontFamily="@font/belleza"
+        android:text="No reports yet.."
         android:textColor="@color/text2"
         android:textSize="32dp" />
 </FrameLayout>

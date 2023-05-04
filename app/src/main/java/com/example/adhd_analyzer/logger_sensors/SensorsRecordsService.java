@@ -47,6 +47,7 @@ import java.util.Date;
 import java.util.List;
 
 public class SensorsRecordsService extends Service implements SensorEventListener, LocationListener {
+    private int PERMISSION_LOCATION_CODE = 1;
 
     private static final int NOTIFICATION_ID = 1;
     private static final int DELAY_IN_MILLIS = 2 * 60 * 1000; // 23 minutes
@@ -77,22 +78,21 @@ public class SensorsRecordsService extends Service implements SensorEventListene
             @Override
             public void run() {
                 List<SensorLog> logList = logDao.index();
-                if (! Python.isStarted()){
+                if (!Python.isStarted()) {
                     Python.start(new AndroidPlatform(context));
                 }
-                Python py =Python.getInstance();
-                PyObject pyObject = py.getModule("data_process").callAttr("process",logList);
+                Python py = Python.getInstance();
+                PyObject pyObject = py.getModule("data_process").callAttr("process", logList);
                 ProcessedDataDB dataDB = ModuleDB.getProcessedDB(context);
                 processedDataDao dataDao = dataDB.processedDataDao();
                 dataDao.insertList(ProcessedData.convertToProcessData(pyObject));
 
             }
-        },DELAY_IN_MILLIS);
+        }, DELAY_IN_MILLIS);
 
 
         return START_STICKY;
     }
-
 
 
     @Override
@@ -112,7 +112,7 @@ public class SensorsRecordsService extends Service implements SensorEventListene
         Sensor magnetometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         sensorManager.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
         sensorManager.registerListener(this, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(this,magnetometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, magnetometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
         // Initialize location manager
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -125,15 +125,14 @@ public class SensorsRecordsService extends Service implements SensorEventListene
         }
 
 
-
-        db = Room.databaseBuilder(getApplicationContext(),SensorsDB.class,"sensorsDB").allowMainThreadQueries().build();
+        db = Room.databaseBuilder(getApplicationContext(), SensorsDB.class, "sensorsDB").allowMainThreadQueries().build();
         logDao = db.sensorLogDao();
         logDao.nukeTable();
 
 
     }
 
-    public class LogBinder extends Binder{
+    public class LogBinder extends Binder {
 
     }
 
@@ -178,12 +177,51 @@ public class SensorsRecordsService extends Service implements SensorEventListene
         // Stop recording
         sensorManager.unregisterListener(this);
         locationManager.removeUpdates(this);
+        Toast.makeText(this, "finish", Toast.LENGTH_SHORT).show();
+
 
     }
 
 
     @Override
-    public void onSensorChanged(SensorEvent sensorEvent) {
+    public void onSensorChanged(SensorEvent event) {
+        Date now = new Date();
+        if (now.getTime() - startTime.getTime() > 1000 * 60 * 60 * 24) {
+            return;
+        }
+
+        // Record sensor data
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            accelerometerData = event.values.clone();
+        } else if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+            gyroscopeData = event.values.clone();
+        } else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+            magnetometerData = event.values.clone();
+        }
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            return;
+        }
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if (location != null) {
+            // Format sensor data as CSV
+            long timestamp = System.currentTimeMillis();
+            float accelerometerX = accelerometerData[0];
+            float accelerometerY = accelerometerData[1];
+            float accelerometerZ = accelerometerData[2];
+            float gyroscopeX = gyroscopeData[0];
+            float gyroscopeY = gyroscopeData[1];
+            float gyroscopeZ = gyroscopeData[2];
+            float magnetometerX = magnetometerData[0];
+            float magnetometerY = magnetometerData[1];
+            float magnetometerZ = magnetometerData[2];
+            double latitude = location.getLatitude();
+            double longitude = location.getLongitude();
+            double altitude = location.getAltitude();
+            SensorLog log = new SensorLog(timestamp, accelerometerX, accelerometerY, accelerometerZ, gyroscopeX, gyroscopeY, gyroscopeZ, magnetometerX, magnetometerY, magnetometerZ, latitude, longitude, altitude);
+            logDao.insert(log);
+        }
 
     }
 

@@ -23,43 +23,6 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <Button
-                    android:id="@+id/truck_button"
-                    android:layout_width="300dp"
-                    android:layout_height="300dp"
-                    android:layout_margin="30dp"
-                    android:background="@drawable/circular_button_background"
-                    android:fontFamily="@font/amiko"
-                    android:padding="15dp"
-                    android:text="Start Tracking"
-                    android:textColor="@color/text"
-                    android:textSize="32dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.5" />
-
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="16dp"
-                    android:text="hello *username*!"
-                    android:fontFamily="@font/belleza"
-                    android:textSize="25dp"
-                    app:layout_constraintBottom_toTopOf="@id/truck_button"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="1.0" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
         </FrameLayout>
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:layout_width="match_parent"
