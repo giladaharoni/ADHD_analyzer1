@@ -47,7 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:background="@color/myButtonColor"
+            android:background="#444444"
             android:fontFamily="@font/belleza"
             android:text="Never"
             android:textColor="@color/text" />
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:text="Rarely"
-            android:background="@color/myButtonColor"
+            android:background="#444444"
             android:textColor="@color/text"
             android:fontFamily="@font/belleza"/>
 
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:text="Often"
-            android:background="@color/myButtonColor"
+            android:background="#444444"
             android:textColor="@color/text"
             android:fontFamily="@font/belleza"/>
 
@@ -78,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:text="Very often"
-            android:background="@color/myButtonColor"
+            android:background="#444444"
             android:textColor="@color/text"
             android:fontFamily="@font/belleza"/>
     </LinearLayout>

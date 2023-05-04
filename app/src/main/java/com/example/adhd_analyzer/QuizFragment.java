@@ -1,12 +1,14 @@
 package com.example.adhd_analyzer;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +42,10 @@ public class QuizFragment extends Fragment implements View.OnClickListener{
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    public static String files[] = {
+            "", "", "", "", ""
+    };
 
     public QuizFragment() {
         // Required empty public constructor
@@ -111,19 +117,22 @@ public class QuizFragment extends Fragment implements View.OnClickListener{
     }
 
     private void finishQuiz() {
-        File file = new File(Environment.getExternalStorageDirectory(), "ADHD_Quiz");
+        Context context = this.getContext();
+        File file = new File(context.getFilesDir(), "ADHD_Quiz.txt");
         try {
             FileOutputStream fos = new FileOutputStream(file);
             for(int i=0; i<totalQuestions; i++){
-                String line = QuestionAnswer.question[i] + " ";
+                String line = QuestionAnswer.question[i] + "- ";
                 fos.write(line.getBytes());
                 String line2 = QuestionAnswer.answers[i] + "\n";
                 fos.write(line2.getBytes());
             }
+            files[0] = file.getCanonicalPath().toString();
             fos.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         String passStatus = "Finish message";
         new AlertDialog.Builder(this.getContext())
                 .setTitle(passStatus)
