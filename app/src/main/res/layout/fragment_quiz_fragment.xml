@@ -40,7 +40,8 @@
             android:textColor="@color/text2"
             android:fontFamily="@font/belleza"
             android:id="@+id/question"
-            android:layout_gravity="center_horizontal" />
+            android:layout_margin="20dp"
+            android:layout_gravity="center_horizontal"/>
 
         <Button
             android:id="@+id/Ans_never"
@@ -86,7 +87,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="500dp">
+        android:layout_marginTop="600dp">
 
         <Button
             android:id="@+id/Submit"
@@ -95,8 +96,19 @@
             android:layout_margin="5dp"
             android:fontFamily="@font/belleza"
             android:text="submit"
-            android:background="@drawable/submit_button"
+            android:background="@color/myButtonColor"
             android:textColor="@color/text"
-            android:layout_gravity="end" />
+            android:layout_gravity="center" />
+        <Button
+            android:id="@+id/Start_over"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:fontFamily="@font/belleza"
+            android:text="start over"
+            android:background="#B1A9A9"
+            android:textColor="@color/text2"
+            android:layout_gravity="center"/>
+
     </LinearLayout>
 </FrameLayout>

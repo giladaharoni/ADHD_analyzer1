@@ -30,6 +30,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener{
     TextView questionTextView;
     Button ansA, ansB, ansC, ansD;
     Button submit;
+    Button startOver;
     int totalQuestions = QuestionAnswer.question.length;
     int currentQuestionIndex = 0;
     String selectedAnswer = "";
@@ -95,11 +96,13 @@ public class QuizFragment extends Fragment implements View.OnClickListener{
         ansC = view.findViewById(R.id.Ans_often);
         ansD = view.findViewById(R.id.Ans_very_often);
         submit = view.findViewById(R.id.Submit);
+        startOver = view.findViewById(R.id.Start_over);
         ansA.setOnClickListener(this);
         ansB.setOnClickListener(this);
         ansC.setOnClickListener(this);
         ansD.setOnClickListener(this);
         submit.setOnClickListener(this);
+        startOver.setOnClickListener(this);
         totalQuestionsTextView.setText("Total questions :" + totalQuestions);
         loadNewQuestions();
 
@@ -113,7 +116,6 @@ public class QuizFragment extends Fragment implements View.OnClickListener{
             return;
         }
         questionTextView.setText(QuestionAnswer.question[currentQuestionIndex]);
-
     }
 
     private void finishQuiz() {
@@ -133,11 +135,13 @@ public class QuizFragment extends Fragment implements View.OnClickListener{
             e.printStackTrace();
         }
 
-        String passStatus = "Finish message";
+        String passStatus = "Finish";
         new AlertDialog.Builder(this.getContext())
                 .setTitle(passStatus)
-                .setMessage("Finish All The Questions!")
+                .setMessage("Finish All The Questions! \n you can start again whenever you want!")
                 .show();
+        currentQuestionIndex=0;
+        loadNewQuestions();
     }
 
     @Override
@@ -148,7 +152,14 @@ public class QuizFragment extends Fragment implements View.OnClickListener{
         ansD.setBackgroundColor(Color.DKGRAY);
 
         Button clickedButton = (Button) view;
-        if(clickedButton.getId() == R.id.Submit){
+        if(clickedButton.getId() == R.id.Start_over){
+            currentQuestionIndex=0;
+            loadNewQuestions();
+        }
+        else if(clickedButton.getId() == R.id.Submit){
+            if(currentQuestionIndex == totalQuestions){
+                return;
+            }
             QuestionAnswer.answers[currentQuestionIndex] = selectedAnswer;
             currentQuestionIndex++;
             loadNewQuestions();
