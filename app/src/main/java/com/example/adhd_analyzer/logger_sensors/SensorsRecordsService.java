@@ -73,25 +73,32 @@ public class SensorsRecordsService extends Service implements SensorEventListene
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
         handler = new Handler();
-        Context context = getApplicationContext();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                List<SensorLog> logList = logDao.index();
-                if (!Python.isStarted()) {
-                    Python.start(new AndroidPlatform(context));
-                }
-                Python py = Python.getInstance();
-                PyObject pyObject = py.getModule("data_process").callAttr("process", logList);
-                ProcessedDataDB dataDB = ModuleDB.getProcessedDB(context);
-                processedDataDao dataDao = dataDB.processedDataDao();
-                dataDao.insertList(ProcessedData.convertToProcessData(pyObject));
+                finishAndProcess();
+                //should finish the service
 
             }
         }, DELAY_IN_MILLIS);
 
 
+
         return START_STICKY;
+    }
+
+    private void finishAndProcess(){
+        Context context = getApplicationContext();
+
+        List<SensorLog> logList = logDao.index();
+        if (!Python.isStarted()) {
+            Python.start(new AndroidPlatform(context));
+        }
+        Python py = Python.getInstance();
+        PyObject pyObject = py.getModule("data_process").callAttr("process", logList);
+        ProcessedDataDB dataDB = ModuleDB.getProcessedDB(context);
+        processedDataDao dataDao = dataDB.processedDataDao();
+        dataDao.insertList(ProcessedData.convertToProcessData(pyObject));
     }
 
 
@@ -170,6 +177,7 @@ public class SensorsRecordsService extends Service implements SensorEventListene
 
     public void onDestroy() {
         super.onDestroy();
+        finishAndProcess();
         if (handler != null && removeNotificationRunnable != null) {
             handler.removeCallbacks(removeNotificationRunnable);
         }
@@ -205,7 +213,6 @@ public class SensorsRecordsService extends Service implements SensorEventListene
         }
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (location != null) {
-            // Format sensor data as CSV
             long timestamp = System.currentTimeMillis();
             float accelerometerX = accelerometerData[0];
             float accelerometerY = accelerometerData[1];

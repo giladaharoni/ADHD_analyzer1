@@ -10,6 +10,7 @@ import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +29,8 @@ public class home extends AppCompatActivity implements BottomNavigationView.OnNa
     ReportsFragment reportsFragment = new ReportsFragment();
 
     HomeFragment homeFragment = new HomeFragment();
+
+    public int PermissionCode = 1;
 
 
 
@@ -75,4 +78,13 @@ public class home extends AppCompatActivity implements BottomNavigationView.OnNa
         return false;
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PermissionCode) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+            }
+        }
+    }
 }

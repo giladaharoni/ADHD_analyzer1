@@ -3,6 +3,7 @@ package com.example.adhd_analyzer;
 import android.Manifest;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -91,7 +92,7 @@ public class HomeFragment extends Fragment {
                     tracking.setText(R.string.start_tracking);
 
                 } else{
-                    //should check premission here
+                    checkRequest();
                     getActivity().startService(new Intent(view.getContext(), SensorsRecordsService.class));
                     tracking.setText(R.string.stop_tracking);
                     buttonStateViewModel.setButtonClickableState(false);
@@ -105,6 +106,36 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+
+    private void checkRequest() {
+        if ((ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) && (ActivityCompat.checkSelfPermission(this.getContext()
+                , Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
+            return;
+        } else {
+            int code = 0;
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),Manifest.permission.ACCESS_FINE_LOCATION)){
+                new AlertDialog.Builder(this.getContext()).setTitle("permission needed")
+                        .setMessage("we noeed sdfsdf").setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},code);
+
+                            }
+                        }).setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        }).create().show();
+
+            } else {
+                ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},code);
+
+            }
+        }
+    }
+
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
