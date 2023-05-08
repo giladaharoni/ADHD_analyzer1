@@ -18,6 +18,7 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
@@ -37,6 +38,7 @@ import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
 import com.example.adhd_analyzer.R;
 import com.example.adhd_analyzer.home;
+import com.google.gson.Gson;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -95,10 +97,17 @@ public class SensorsRecordsService extends Service implements SensorEventListene
             Python.start(new AndroidPlatform(context));
         }
         Python py = Python.getInstance();
-        PyObject pyObject = py.getModule("data_process").callAttr("process", logList);
+        Gson gson = new Gson();
+        String jsons = gson.toJson(logList);
+        PyObject pyObject = py.getModule("data_process").callAttr("process", jsons);
         ProcessedDataDB dataDB = ModuleDB.getProcessedDB(context);
         processedDataDao dataDao = dataDB.processedDataDao();
-        dataDao.insertList(ProcessedData.convertToProcessData(pyObject));
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                dataDao.insertList(ProcessedData.convertToProcessData(pyObject));
+            }
+        });
     }
 
 
