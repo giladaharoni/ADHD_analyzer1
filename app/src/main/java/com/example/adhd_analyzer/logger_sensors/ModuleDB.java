@@ -8,7 +8,7 @@ public class ModuleDB {
     private static ProcessedDataDB dataDB;
     public static synchronized ProcessedDataDB getProcessedDB(Context context){
         if (dataDB == null){
-            dataDB = Room.databaseBuilder(context,ProcessedDataDB.class,"process_data").build();
+            dataDB = Room.databaseBuilder(context,ProcessedDataDB.class,"process_data").fallbackToDestructiveMigration().build();
         }
         return dataDB;
     }
