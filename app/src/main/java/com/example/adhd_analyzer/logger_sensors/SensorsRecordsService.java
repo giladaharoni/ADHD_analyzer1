@@ -74,7 +74,7 @@ public class SensorsRecordsService extends Service implements SensorEventListene
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        //startForeground();
+        startForeground();
         handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -91,6 +91,13 @@ public class SensorsRecordsService extends Service implements SensorEventListene
     }
 
     private void startForeground(){
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                NotificationChannel channel = new NotificationChannel(CHANNEL_ID,"adhd analyzer",NotificationManager.IMPORTANCE_DEFAULT);
+                channel.setDescription("the service is running");
+                getSystemService(NotificationManager.class).createNotificationChannel(channel);
+        }
+
         Intent notificationIntent = new Intent(this, home.class);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
