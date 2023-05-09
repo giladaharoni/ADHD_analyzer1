@@ -12,8 +12,8 @@ import java.util.List;
 public interface processedDataDao {
     @Query("SELECT * FROM ProcessedData")
     List<ProcessedData> index();
-    @Query("SELECT * FROM ProcessedData WHERE timestamp = :timestamp")
-    ProcessedData get(long timestamp);
+    @Query("SELECT * FROM ProcessedData WHERE timestamp = :timestamp and sessionId = :sessionId")
+    ProcessedData get(long timestamp, long sessionId);
 
     @Insert
     void insert(ProcessedData... processedData);

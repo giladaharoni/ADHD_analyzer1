@@ -114,12 +114,12 @@ public class HomeFragment extends Fragment {
             return;
         } else {
             int code = 0;
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),Manifest.permission.ACCESS_FINE_LOCATION)){
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),Manifest.permission.ACCESS_BACKGROUND_LOCATION)){
                 new AlertDialog.Builder(this.getContext()).setTitle("permission needed")
                         .setMessage("we noeed sdfsdf").setPositiveButton("ok", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},code);
+                                ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION},code);
 
                             }
                         }).setNegativeButton("cancel", new DialogInterface.OnClickListener() {
@@ -130,7 +130,7 @@ public class HomeFragment extends Fragment {
                         }).create().show();
 
             } else {
-                ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},code);
+                ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION},code);
 
             }
         }

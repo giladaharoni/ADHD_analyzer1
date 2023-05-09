@@ -74,6 +74,7 @@ public class SensorsRecordsService extends Service implements SensorEventListene
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
+        //startForeground();
         handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -88,6 +89,23 @@ public class SensorsRecordsService extends Service implements SensorEventListene
 
         return START_STICKY;
     }
+
+    private void startForeground(){
+        Intent notificationIntent = new Intent(this, home.class);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+                notificationIntent, PendingIntent.FLAG_IMMUTABLE);
+        startForeground(1, new NotificationCompat.Builder(this,
+                CHANNEL_ID) // don't forget create a notification channel first
+                .setOngoing(true)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentTitle(getString(R.string.app_name))
+                .setContentText("Service is running background")
+                .setContentIntent(pendingIntent)
+                .build());
+
+    }
+
 
     private void finishAndProcess(){
         Context context = getApplicationContext();
@@ -105,7 +123,7 @@ public class SensorsRecordsService extends Service implements SensorEventListene
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                dataDao.insertList(ProcessedData.convertToProcessData(pyObject));
+                dataDao.insertList(ProcessedData.convertToProcessData(pyObject,startTime.getTime()));
             }
         });
     }
