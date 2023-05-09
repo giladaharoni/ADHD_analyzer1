@@ -59,7 +59,7 @@
             android:textSize="22dp"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="461dp"
-             android:layout_gravity="end"/>
+            android:layout_gravity="end"/>
 
         <TextView
             android:layout_width="match_parent"

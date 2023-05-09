@@ -1,12 +1,23 @@
 package com.example.adhd_analyzer;
 
+import android.app.DownloadManager;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
+
+import java.io.File;
+
+import static androidx.core.content.ContextCompat.getSystemService;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,12 +64,38 @@ public class ReportsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_reports_fragment, container, false);
+        //return inflater.inflate(R.layout.fragment_reports_fragment, container, false);
+
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_reports_fragment, container, false);
+
+        // Find the download button by its ID and set an OnClickListener
+        Button downloadButton = view.findViewById(R.id.download_button);
+//        downloadButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Create a new Intent to send the file to another app
+//                Intent intent = new Intent(Intent.ACTION_SEND);
+//                intent.setType("text/plain");
+//                intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + QuizFragment.files[0]));
+//
+//                // Add the code for downloading the file using Download Manager
+//                DownloadManager downloadManager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+//                DownloadManager.Request request = new DownloadManager.Request(Uri.parse("file://" + QuizFragment.files[0]));
+//                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+//                downloadManager.enqueue(request);
+//            }
+//        });
+
+        return view;
     }
+
 }
