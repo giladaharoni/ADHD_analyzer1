@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.adhd_analyzer.logger_sensors.SensorsRecordsService;
 import com.example.adhd_analyzer.viewmodels.ButtonStateViewModel;
@@ -61,6 +62,7 @@ public class HomeFragment extends Fragment {
 
         }
         buttonStateViewModel= new ViewModelProvider(this).get(ButtonStateViewModel.class);
+
     }
     ButtonStateViewModel  buttonStateViewModel;
 
@@ -76,6 +78,12 @@ public class HomeFragment extends Fragment {
             }
         });
         initButton(tracking);
+
+        TextView hello = view.findViewById(R.id.hello_user);
+        String username = savedInstanceState.getString("username");
+        String fullname = savedInstanceState.getString("fullname");
+        String s_hello = "hello" + username +"!";
+        hello.setText(s_hello);
 
         return view;
     }

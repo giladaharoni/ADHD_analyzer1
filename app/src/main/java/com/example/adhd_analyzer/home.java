@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.adhd_analyzer.logger_sensors.SensorsRecordsService;
@@ -42,6 +43,8 @@ public class home extends AppCompatActivity implements BottomNavigationView.OnNa
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(R.id.home);
+
+
 
     }
 

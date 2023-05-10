@@ -51,7 +51,7 @@
             android:fontFamily="@font/belleza"
             android:textSize="32dp" />
         <EditText
-            android:id="@+id/password_edit_text_new_password"
+            android:id="@+id/password_edit_text_verify_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Verify Password"
@@ -59,7 +59,7 @@
             android:inputType="textPassword"
             android:textSize="32dp" />
         <Button
-            android:id="@+id/login_button"
+            android:id="@+id/register_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/myButtonColor"

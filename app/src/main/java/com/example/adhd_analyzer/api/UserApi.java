@@ -13,9 +13,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class UserApi {
-    Retrofit retrofit;
-    WebServiceApi webServiceApi;
-
+    private static Retrofit retrofit;
+    private static WebServiceApi webServiceApi;
+    private static final String BASE_URL = ADHD_analyzer1.context.getString(R.string.BaseUrl);
     public UserApi(){
         retrofit = new Retrofit.Builder()
                 .baseUrl(ADHD_analyzer1.context.getString(R.string.BaseUrl))
@@ -23,6 +23,16 @@ public class UserApi {
                 .build();
         webServiceApi = retrofit.create(WebServiceApi.class);
     }
+    public static Retrofit getRetrofitInstance() {
+        if (retrofit == null) {
+            retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        return retrofit;
+    }
+
     public void get() {
         Call<List<User>> call = webServiceApi.getUsers();
         call.enqueue(new Callback<List<User>>() {
