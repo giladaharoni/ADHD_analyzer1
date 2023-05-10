@@ -51,7 +51,11 @@ public class login extends AppCompatActivity {
                             Intent intent = new Intent(login.this, home.class);
                             intent.putExtra("username", username);
                             intent.putExtra("password", password);
-                            startActivity(intent);
+                            if(response.code() == 400){
+                                Toast.makeText(login.this, "wrong username or password", Toast.LENGTH_SHORT).show();
+                            } else {
+                                startActivity(intent);
+                            }
                         } else {
                             // Registration failed
                             Toast.makeText(login.this, "Registration failed: " + response.code(), Toast.LENGTH_SHORT).show();

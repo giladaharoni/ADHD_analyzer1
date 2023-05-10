@@ -31,23 +31,26 @@ public interface WebServiceApi {
     Call<List<Answer>> getAnswers();
 
 
-//    @GET("QuizAnswers/{username}")
-//    Call<List<QuizAnswer>> getQuizAnswersByUser(@Path("username") String username);
-//
-//    @POST("QuizAnswers/upload")
-//    Call<Void> uploadAnswers(@Body QuizAnswersUploadRequest request);
-//
-//    @PUT("QuizAnswers/update/{username}")
-//    Call<Void> updateAnswers(@Path("username") String username, @Body QuizAnswersUpdateRequest request);
-//
-//    public static class QuizAnswersUploadRequest {
-//        public String username;
-//        public List<GivenAnswer> answers;
-//    }
-//
-//    public static class QuizAnswersUpdateRequest {
-//        public String username;
-//        public List<GivenAnswer> answers;
-//    }
+    @GET("QuizAnswers/{username}")
+    Call<List<Void>> getQuizAnswersByUser(@Path("username") String username);
+
+
+    @POST("QuizAnswers")
+    Call<Void> uploadQuizAnswers(@Query("username") String username, @Body List<String> answers);
+
+
+
+    @PUT("QuizAnswers/update/{username}")
+    Call<Void> updateAnswers(@Path("username") String username, @Body QuizAnswersUpdateRequest request);
+
+    public static class QuizAnswersUploadRequest {
+        public String username;
+        public List<Answer> answers;
+    }
+
+    public static class QuizAnswersUpdateRequest {
+        public String username;
+        public List<Answer> answers;
+    }
 
 }

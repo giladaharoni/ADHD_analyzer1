@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import retrofit2.Call;
 
 import android.os.Environment;
 import android.util.Log;
@@ -15,9 +16,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.adhd_analyzer.api.UserApi;
+import com.example.adhd_analyzer.api.WebServiceApi;
+import com.example.adhd_analyzer.entities.Answer;
+import com.example.adhd_analyzer.entities.User;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,6 +51,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener{
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    String username;
 
     public static String files[] = {
             "", "", "", "", ""
@@ -106,6 +115,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener{
         totalQuestionsTextView.setText("Total questions :" + totalQuestions);
         loadNewQuestions();
 
+        username = savedInstanceState.getString("username");
 
         return view;
     }
@@ -120,20 +130,23 @@ public class QuizFragment extends Fragment implements View.OnClickListener{
 
     private void finishQuiz() {
         Context context = this.getContext();
-        File file = new File(context.getFilesDir(), "ADHD_Quiz.txt");
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            for(int i=0; i<totalQuestions; i++){
-                String line = QuestionAnswer.question[i] + "- ";
-                fos.write(line.getBytes());
-                String line2 = QuestionAnswer.answers[i] + "\n";
-                fos.write(line2.getBytes());
-            }
-            files[0] = file.getCanonicalPath().toString();
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        WebServiceApi api = UserApi.getRetrofitInstance().create(WebServiceApi.class);
+        Call<Void> call = api.uploadQuizAnswers(username, Arrays.asList(QuestionAnswer.answers));
+
+//        File file = new File(context.getFilesDir(), "ADHD_Quiz.txt");
+//        try {
+//            FileOutputStream fos = new FileOutputStream(file);
+//            for(int i=0; i<totalQuestions; i++){
+//                String line = QuestionAnswer.question[i] + "- ";
+//                fos.write(line.getBytes());
+//                String line2 = QuestionAnswer.answers[i] + "\n";
+//                fos.write(line2.getBytes());
+//            }
+//            files[0] = file.getCanonicalPath().toString();
+//            fos.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         String passStatus = "Finish";
         new AlertDialog.Builder(this.getContext())

@@ -63,7 +63,11 @@ public class activity_register extends AppCompatActivity {
                             intent.putExtra("username", username);
                             intent.putExtra("fullname", fullName);
                             intent.putExtra("password", password);
-                            startActivity(intent);
+                            if(response.code() == 400){
+                                Toast.makeText(activity_register.this, "This username is already use", Toast.LENGTH_SHORT).show();
+                            } else {
+                                startActivity(intent);
+                            }
                         } else {
                             // Registration failed
                             Toast.makeText(activity_register.this, "Registration failed: " + response.code(), Toast.LENGTH_SHORT).show();

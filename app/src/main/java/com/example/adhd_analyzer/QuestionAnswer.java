@@ -1,5 +1,7 @@
 package com.example.adhd_analyzer;
 
+import com.example.adhd_analyzer.entities.Answer;
+
 public class QuestionAnswer {
     public static String [] question = {
             "1) likes to engage in active activities, sports, etc.",

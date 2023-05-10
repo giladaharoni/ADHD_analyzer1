@@ -5,4 +5,5 @@ public class Data {
     private long Timestamp;
     private Boolean StayInPlace;
     private Boolean HighAdhd;
+
 }
