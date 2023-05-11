@@ -15,7 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class UserApi {
     private static Retrofit retrofit;
     private static WebServiceApi webServiceApi;
-    private static final String BASE_URL = "https://adhdanaylzeradminapi.azurewebsites.net/";
+    private static final String BASE_URL = "https://adhdanaylzeradminapi.azurewebsites.net/api/";
     public UserApi(){
         retrofit = new Retrofit.Builder()
                 .baseUrl(ADHD_analyzer1.context.getString(R.string.BaseUrl))

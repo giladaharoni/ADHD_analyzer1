@@ -20,7 +20,7 @@ public class AnswerApi {
     private static Retrofit retrofit;
     WebServiceApi webServiceApi;
 
-    private static final String BASE_URL = "https://adhdanaylzeradminapi.azurewebsites.net/";
+    private static final String BASE_URL = "https://adhdanaylzeradminapi.azurewebsites.net/api/";
 
     public AnswerApi(){
         retrofit = new Retrofit.Builder()

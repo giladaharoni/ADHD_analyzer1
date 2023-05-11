@@ -16,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class DataApi {
     private static Retrofit retrofit;
     WebServiceApi webServiceApi;
-    private static final String BASE_URL = "https://adhdanaylzeradminapi.azurewebsites.net/";
+    private static final String BASE_URL = "https://adhdanaylzeradminapi.azurewebsites.net/api/";
 
     public DataApi(){
         retrofit = new Retrofit.Builder()
