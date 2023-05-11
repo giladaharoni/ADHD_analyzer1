@@ -9,6 +9,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
@@ -29,6 +30,8 @@ import android.widget.TextView;
 
 import com.example.adhd_analyzer.logger_sensors.SensorsRecordsService;
 import com.example.adhd_analyzer.viewmodels.ButtonStateViewModel;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -80,9 +83,14 @@ public class HomeFragment extends Fragment {
         initButton(tracking);
 
         TextView hello = view.findViewById(R.id.hello_user);
-        String username = savedInstanceState.getString("username");
-        String fullname = savedInstanceState.getString("fullname");
-        String s_hello = "hello" + username +"!";
+//        String username = savedInstanceState.getString("username");
+//        String fullname = savedInstanceState.getString("fullname");
+
+        SharedPreferences prefs = getActivity().getSharedPreferences("myPrefs", MODE_PRIVATE);
+        String username = prefs.getString("username", null);
+        String email = prefs.getString("password", null);
+
+        String s_hello = "hello " + username +"!";
         hello.setText(s_hello);
 
         return view;
