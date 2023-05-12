@@ -115,7 +115,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener{
         totalQuestionsTextView.setText("Total questions :" + totalQuestions);
         loadNewQuestions();
 
-        username = savedInstanceState.getString("username");
+        //username = savedInstanceState.getString("username");
 
         return view;
     }

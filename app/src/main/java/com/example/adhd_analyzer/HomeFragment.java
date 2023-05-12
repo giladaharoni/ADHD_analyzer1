@@ -88,9 +88,9 @@ public class HomeFragment extends Fragment {
 
         SharedPreferences prefs = getActivity().getSharedPreferences("myPrefs", MODE_PRIVATE);
         String username = prefs.getString("username", null);
-        String email = prefs.getString("password", null);
-
-        String s_hello = "hello " + username +"!";
+        String password = prefs.getString("password", null);
+        String fullname = prefs.getString("fullName", null);
+        String s_hello = "hello " + fullname +"!";
         hello.setText(s_hello);
 
         return view;

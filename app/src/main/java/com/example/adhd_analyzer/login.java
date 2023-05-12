@@ -53,10 +53,13 @@ public class login extends AppCompatActivity {
                            // intent.putExtra("username", username);
                           //  intent.putExtra("password", password);
 
+                            String fullName = user.getFullName();
+
                             SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
                             SharedPreferences.Editor editor = prefs.edit();
                             editor.putString("username", username);
                             editor.putString("password", password);
+                            editor.putString("fullName", fullName);
                             editor.apply();
 
 
@@ -67,7 +70,7 @@ public class login extends AppCompatActivity {
                             }
                         } else {
                             // Registration failed
-                            Toast.makeText(login.this, "Registration failed: " + response.code(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(login.this, "login failed: " + response.code(), Toast.LENGTH_SHORT).show();
                         }
                     }
 

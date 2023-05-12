@@ -9,4 +9,22 @@ public class User {
     private String Password;
     private String userName;
     private String fullName;
+
+    public User(String password, String userName, String fullName) {
+        Password = password;
+        this.userName = userName;
+        this.fullName = fullName;
+    }
+
+    public String getPassword() {
+        return Password;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
 }
