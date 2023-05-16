@@ -67,18 +67,7 @@ public class login extends AppCompatActivity {
                             // User registered successfully
                             User user = response.body();
                             Intent intent = new Intent(login.this, home.class);
-                           // intent.putExtra("username", username);
-                          //  intent.putExtra("password", password);
-
-
                             String fullName = user.getFullName();
-
-//                            SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
-//                            SharedPreferences.Editor editor = prefs.edit();
-//                            editor.putString("username", username);
-//                            editor.putString("password", password);
-//                            editor.putString("fullName", fullName);
-//                            editor.apply();
 
                             theUser.setFullName(fullName);
                             theUser.setUserName(username);

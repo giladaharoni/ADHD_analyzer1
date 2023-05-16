@@ -1,6 +1,6 @@
 package com.example.adhd_analyzer;
 
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -17,9 +17,6 @@ import android.widget.Toast;
 
 import com.example.adhd_analyzer.api.UserApi;
 import com.example.adhd_analyzer.api.WebServiceApi;
-import com.example.adhd_analyzer.entities.User;
-
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,7 +30,7 @@ public class SettingFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    Button passwordClick, userNameClick, fullNameClick;
+    Button passwordClick, logoutClick, fullNameClick;
     EditText passwordText, passwordTextVe, fullNameText;
 
 
@@ -79,10 +76,23 @@ public class SettingFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_setting_fragment, container, false);
         passwordClick = view.findViewById(R.id.ok_change_password);
         fullNameClick = view.findViewById(R.id.ok_change_Fullname);
-        userNameClick = view.findViewById(R.id.ok_change_username);
+        logoutClick = view.findViewById(R.id.logout);
         passwordText = view.findViewById(R.id.change_password);
         passwordTextVe = view.findViewById(R.id.change_password_verify);
         fullNameText = view.findViewById(R.id.change_FULLname);
+
+        logoutClick.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 login.theUser.setUserName("");
+                 login.theUser.setFullName("");
+                 login.theUser.setPassword("");
+                 Intent intent = new Intent(getActivity(), login.class);
+                 startActivity(intent);
+                 getActivity().finish();
+             }
+         });
+
         passwordClick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
