@@ -67,14 +67,16 @@ public class activity_register extends AppCompatActivity {
 
                             String fullName = user.getFullName();
 
-                            SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = prefs.edit();
-                            editor.putString("username", username);
-                            editor.putString("password", password);
-                            editor.putString("fullName", fullName);
-                            editor.apply();
+//                            SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
+//                            SharedPreferences.Editor editor = prefs.edit();
+//                            editor.putString("username", username);
+//                            editor.putString("password", password);
+//                            editor.putString("fullName", fullName);
+//                            editor.apply();
 
-
+                            login.theUser.setFullName(fullName);
+                            login.theUser.setUserName(username);
+                            login.theUser.setPassword(password);
 
                             if(response.code() == 400){
                                 Toast.makeText(activity_register.this, "This username is already use", Toast.LENGTH_SHORT).show();

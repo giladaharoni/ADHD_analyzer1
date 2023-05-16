@@ -83,13 +83,8 @@ public class HomeFragment extends Fragment {
         initButton(tracking);
 
         TextView hello = view.findViewById(R.id.hello_user);
-//        String username = savedInstanceState.getString("username");
-//        String fullname = savedInstanceState.getString("fullname");
-
-        SharedPreferences prefs = getActivity().getSharedPreferences("myPrefs", MODE_PRIVATE);
-        String username = prefs.getString("username", null);
-        String password = prefs.getString("password", null);
-        String fullname = prefs.getString("fullName", null);
+        //SharedPreferences prefs = getActivity().getSharedPreferences("myPrefs", MODE_PRIVATE);
+        String fullname = login.theUser.getFullName();
         String s_hello = "hello " + fullname +"!";
         hello.setText(s_hello);
 

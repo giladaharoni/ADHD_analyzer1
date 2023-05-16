@@ -43,10 +43,6 @@ public interface WebServiceApi {
     @PUT("QuizAnswers/update/{username}")
     Call<Void> updateAnswers(@Path("username") String username, @Body QuizAnswersUpdateRequest request);
 
-    public static class QuizAnswersUploadRequest {
-        public String username;
-        public List<Answer> answers;
-    }
 
     public static class QuizAnswersUpdateRequest {
         public String username;

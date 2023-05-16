@@ -18,9 +18,26 @@ import com.example.adhd_analyzer.api.WebServiceApi;
 import com.example.adhd_analyzer.entities.User;
 
 public class login extends AppCompatActivity {
+
+    public static User theUser = new User("", "", "");
     private EditText mUsernameEditText;
     private EditText mPasswordEditText;
     private Button mLoginButton;
+
+//    public String getUserName(){
+//        return this.theUser.getUserName();
+//    }
+//    public String getPassword(){
+//        return this.theUser.getPassword();
+//    }
+//    public String getFullName(){
+//        return this.theUser.getFullName();
+//    }
+//    private void setTheUser(String password, String userName, String fullName){
+//        this.theUser.setUserName(userName);
+//        this.theUser.setPassword(password);
+//        this.theUser.setFullName(fullName);
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,14 +70,19 @@ public class login extends AppCompatActivity {
                            // intent.putExtra("username", username);
                           //  intent.putExtra("password", password);
 
+
                             String fullName = user.getFullName();
 
-                            SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = prefs.edit();
-                            editor.putString("username", username);
-                            editor.putString("password", password);
-                            editor.putString("fullName", fullName);
-                            editor.apply();
+//                            SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
+//                            SharedPreferences.Editor editor = prefs.edit();
+//                            editor.putString("username", username);
+//                            editor.putString("password", password);
+//                            editor.putString("fullName", fullName);
+//                            editor.apply();
+
+                            theUser.setFullName(fullName);
+                            theUser.setUserName(username);
+                            theUser.setPassword(password);
 
 
                             if(response.code() == 400){

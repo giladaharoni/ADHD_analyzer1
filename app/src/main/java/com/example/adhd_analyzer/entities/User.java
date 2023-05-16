@@ -15,6 +15,15 @@ public class User {
         this.userName = userName;
         this.fullName = fullName;
     }
+    public void setUserName(String userName){
+        this.userName = userName;
+    }
+    public void setFullName(String fullName){
+        this.fullName = fullName;
+    }
+    public void setPassword(String password){
+        this.Password = password;
+    }
 
     public String getPassword() {
         return Password;
