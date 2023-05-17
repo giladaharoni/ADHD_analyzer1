@@ -134,7 +134,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener{
                 .show();
 
         List<QAarray> listJson = new ArrayList<QAarray>();
-        QAarray[] arrayJson = new QAarray[66];
+        //QAarray[] arrayJson = new QAarray[66];
         for(int i = 0; i <= 65; i++){
             switch (QuestionAnswer.answers[i]){
                 case "Never":
@@ -163,7 +163,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener{
 
         Context context = this.getContext();
         WebServiceApi api = UserApi.getRetrofitInstance().create(WebServiceApi.class);
-        Call<Void> call = api.uploadQuizAnswers(username, Arrays.asList(arrayJson));
+        Call<Void> call = api.uploadQuizAnswers(username, listJson);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
