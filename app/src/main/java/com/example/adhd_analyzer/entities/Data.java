@@ -1,32 +1,32 @@
 package com.example.adhd_analyzer.entities;
 
 public class Data {
-    private int SessionId;
-    private long Timestamp;
-    private Boolean StayInPlace;
-    private Boolean HighAdhd;
+    private int sessionId;
+    private long timestamp;
+    private Boolean stayInPlace;
+    private Boolean highAdhd;
 
     public Data(int sessionId, long timestamp, Boolean stayInPlace, Boolean highAdhd) {
-        SessionId = sessionId;
-        Timestamp = timestamp;
-        StayInPlace = stayInPlace;
-        HighAdhd = highAdhd;
+        this.sessionId = sessionId;
+        this.timestamp = timestamp;
+        this.stayInPlace = stayInPlace;
+        this.highAdhd = highAdhd;
     }
 
     public Boolean getHighAdhd() {
-        return HighAdhd;
+        return highAdhd;
     }
 
 
     public Boolean getStayInPlace() {
-        return StayInPlace;
+        return stayInPlace;
     }
 
     public long getTimestamp() {
-        return Timestamp;
+        return timestamp;
     }
 
     public int getSessionId() {
-        return SessionId;
+        return sessionId;
     }
 }

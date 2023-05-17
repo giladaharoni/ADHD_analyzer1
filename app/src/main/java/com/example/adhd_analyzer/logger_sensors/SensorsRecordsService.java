@@ -37,7 +37,10 @@ import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
 import com.example.adhd_analyzer.R;
+import com.example.adhd_analyzer.api.UserApi;
+import com.example.adhd_analyzer.api.WebServiceApi;
 import com.example.adhd_analyzer.home;
+import com.example.adhd_analyzer.login;
 import com.google.gson.Gson;
 
 import java.io.BufferedWriter;
@@ -47,6 +50,10 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.Date;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SensorsRecordsService extends Service implements SensorEventListener, LocationListener {
     private int PERMISSION_LOCATION_CODE = 1;
@@ -123,7 +130,28 @@ public class SensorsRecordsService extends Service implements SensorEventListene
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                dataDao.insertList(ProcessedData.convertToProcessData(pyObject,startTime.getTime()));
+                List<ProcessedData> dataList = ProcessedData.convertToProcessData(pyObject,startTime.getTime());
+                dataDao.insertList(dataList);
+                WebServiceApi api = UserApi.getRetrofitInstance().create(WebServiceApi.class);
+                api.uploadData(login.theUser.getUserName(),dataList).enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        int i = 1;
+                        i++;
+                        i++;
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        int i = 1;
+                        i++;
+                        i++;
+                    }
+                });
+
+
+
             }
         });
     }

@@ -1,18 +1,19 @@
 package com.example.adhd_analyzer.user;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity
 public class UserDetails {
-    @PrimaryKey()
-    private long id;
+
     private String fullName;
+    @PrimaryKey()
+    @NonNull
     private String userName;
     private String password;
 
-    public UserDetails(long id, String fullName, String userName, String password) {
-        this.id = id;
+    public UserDetails(String fullName, @NonNull String userName, String password) {
         this.fullName = fullName;
         this.userName = userName;
         this.password = password;
@@ -26,13 +27,6 @@ public class UserDetails {
         this.fullName = fullName;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getUserName() {
         return userName;

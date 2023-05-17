@@ -16,6 +16,9 @@ import android.widget.Toast;
 import com.example.adhd_analyzer.api.UserApi;
 import com.example.adhd_analyzer.api.WebServiceApi;
 import com.example.adhd_analyzer.entities.User;
+import com.example.adhd_analyzer.logger_sensors.ModuleDB;
+import com.example.adhd_analyzer.user.UserDao;
+import com.example.adhd_analyzer.user.UserDetails;
 
 public class login extends AppCompatActivity {
 
@@ -24,20 +27,6 @@ public class login extends AppCompatActivity {
     private EditText mPasswordEditText;
     private Button mLoginButton;
 
-//    public String getUserName(){
-//        return this.theUser.getUserName();
-//    }
-//    public String getPassword(){
-//        return this.theUser.getPassword();
-//    }
-//    public String getFullName(){
-//        return this.theUser.getFullName();
-//    }
-//    private void setTheUser(String password, String userName, String fullName){
-//        this.theUser.setUserName(userName);
-//        this.theUser.setPassword(password);
-//        this.theUser.setFullName(fullName);
-//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +57,7 @@ public class login extends AppCompatActivity {
                             User user = response.body();
                             Intent intent = new Intent(login.this, home.class);
                             String fullName = user.getFullName();
+                            ModuleDB.getUserDetailsDB(view.getContext()).userDao().insert(new UserDetails(fullName,username,password));
 
                             theUser.setFullName(fullName);
                             theUser.setUserName(username);

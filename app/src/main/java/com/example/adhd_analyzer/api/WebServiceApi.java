@@ -3,6 +3,7 @@ import com.example.adhd_analyzer.entities.Answer;
 import com.example.adhd_analyzer.entities.Data;
 import com.example.adhd_analyzer.entities.QAarray;
 import com.example.adhd_analyzer.entities.User;
+import com.example.adhd_analyzer.logger_sensors.ProcessedData;
 
 import java.util.List;
 
@@ -28,6 +29,9 @@ public interface WebServiceApi {
 
     @GET("data")
     Call<List<Data>> getDatas();
+
+    @POST("ProcessData")
+    Call<Void> uploadData(@Query("username") String username,@Body List<ProcessedData> dataList);
     @GET("answers")
     Call<List<Answer>> getAnswers();
 

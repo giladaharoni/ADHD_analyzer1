@@ -2,7 +2,6 @@ package com.example.adhd_analyzer.logger_sensors;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.PrimaryKey;
 
 import com.chaquo.python.PyObject;
 
@@ -19,36 +18,36 @@ public class ProcessedData {
         this.timestamp = timestamp;
     }
 
-    public boolean isStayInplace() {
-        return stayInplace;
+    public boolean isStayInPlace() {
+        return stayInPlace;
     }
 
-    public void setStayInplace(boolean stayInplace) {
-        this.stayInplace = stayInplace;
+    public void setStayInPlace(boolean stayInPlace) {
+        this.stayInPlace = stayInPlace;
     }
 
-    public boolean isHighADHD() {
-        return highADHD;
+    public boolean isHighAdhd() {
+        return highAdhd;
     }
 
-    public void setHighADHD(boolean highADHD) {
-        this.highADHD = highADHD;
+    public void setHighAdhd(boolean highAdhd) {
+        this.highAdhd = highAdhd;
     }
 
     @ColumnInfo
     private long timestamp;
     @ColumnInfo
-    private long sessionId;
+    private int sessionId;
     @ColumnInfo
-    private boolean stayInplace;
+    private boolean stayInPlace;
     @ColumnInfo
-    private boolean highADHD;
+    private boolean highAdhd;
 
-    public ProcessedData(long timestamp, long sessionId, boolean stayInplace, boolean highADHD) {
+    public ProcessedData(long timestamp, int sessionId, boolean stayInPlace, boolean highAdhd) {
         this.timestamp = timestamp;
         this.sessionId = sessionId;
-        this.stayInplace = stayInplace;
-        this.highADHD = highADHD;
+        this.stayInPlace = stayInPlace;
+        this.highAdhd = highAdhd;
     }
 
     public static List<ProcessedData> convertToProcessData(PyObject object, long sessionId){
@@ -56,17 +55,17 @@ public class ProcessedData {
         ArrayList<ProcessedData> processedDataArrayList =  new ArrayList<ProcessedData>();
         for (PyObject ob: obs) {
             List<PyObject> row = ob.asList();
-            ProcessedData data = new ProcessedData(row.get(0).toLong(), sessionId, row.get(1).toBoolean(),row.get(2).toBoolean());
+            ProcessedData data = new ProcessedData(row.get(0).toLong(), (int)sessionId, row.get(1).toBoolean(),row.get(2).toBoolean());
             processedDataArrayList.add(data);
         }
         return processedDataArrayList;
     }
 
-    public long getSessionId() {
+    public int getSessionId() {
         return sessionId;
     }
 
-    public void setSessionId(long sessionId) {
+    public void setSessionId(int sessionId) {
         this.sessionId = sessionId;
     }
 }
