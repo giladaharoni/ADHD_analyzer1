@@ -10,8 +10,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +19,9 @@ import android.widget.Toast;
 
 import com.example.adhd_analyzer.api.UserApi;
 import com.example.adhd_analyzer.api.WebServiceApi;
-import com.example.adhd_analyzer.entities.Answer;
-import com.example.adhd_analyzer.entities.User;
+import com.example.adhd_analyzer.entities.QAarray;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -138,9 +133,37 @@ public class QuizFragment extends Fragment implements View.OnClickListener{
                 .setMessage("Finish All The Questions! \n you can start again whenever you want!")
                 .show();
 
+        List<QAarray> listJson = new ArrayList<QAarray>();
+        QAarray[] arrayJson = new QAarray[66];
+        for(int i = 0; i <= 65; i++){
+            switch (QuestionAnswer.answers[i]){
+                case "Never":
+                    //arrayJson[i] = new QAarray(i, 1);
+                    listJson.add(new QAarray(i, 1));
+                    continue;
+                case "Rarely":
+                    //arrayJson[i] = new QAarray(i, 2);
+                    listJson.add(new QAarray(i, 2));
+                    continue;
+                case "Often":
+                    //arrayJson[i] = new QAarray(i, 3);
+                    listJson.add(new QAarray(i, 3));
+                    continue;
+                case "Very often":
+                    //arrayJson[i] = new QAarray(i, 4);
+                    listJson.add(new QAarray(i, 4));
+                    continue;
+                default:
+                    listJson.add(new QAarray(i, 0));
+                    //arrayJson[i] = new QAarray(i, 0);
+            }
+
+
+        }
+
         Context context = this.getContext();
         WebServiceApi api = UserApi.getRetrofitInstance().create(WebServiceApi.class);
-        Call<Void> call = api.uploadQuizAnswers(username, Arrays.asList(QuestionAnswer.answers));
+        Call<Void> call = api.uploadQuizAnswers(username, Arrays.asList(arrayJson));
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {

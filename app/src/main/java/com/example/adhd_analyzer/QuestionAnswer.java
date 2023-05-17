@@ -72,4 +72,7 @@ public class QuestionAnswer {
             "66) Has an incorrect estimation of times",
     };
     public static String [] answers = new String[66];
+
+    public static QuestionAnswer [] arrayAQ = new QuestionAnswer[66];
+
 }
