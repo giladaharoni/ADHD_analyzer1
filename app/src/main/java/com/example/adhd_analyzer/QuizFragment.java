@@ -7,6 +7,8 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import android.os.Environment;
 import android.util.Log;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.adhd_analyzer.api.UserApi;
 import com.example.adhd_analyzer.api.WebServiceApi;
@@ -129,10 +132,24 @@ public class QuizFragment extends Fragment implements View.OnClickListener{
     }
 
     private void finishQuiz() {
+        String passStatus = "Finish";
+        new AlertDialog.Builder(this.getContext())
+                .setTitle(passStatus)
+                .setMessage("Finish All The Questions! \n you can start again whenever you want!")
+                .show();
+
         Context context = this.getContext();
         WebServiceApi api = UserApi.getRetrofitInstance().create(WebServiceApi.class);
         Call<Void> call = api.uploadQuizAnswers(username, Arrays.asList(QuestionAnswer.answers));
-
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Toast.makeText(getActivity(), "the answers updates!", Toast.LENGTH_SHORT).show();
+            }
+            public void onFailure(Call<Void> call, Throwable t){
+                Toast.makeText(getActivity(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
 //        File file = new File(context.getFilesDir(), "ADHD_Quiz.txt");
 //        try {
 //            FileOutputStream fos = new FileOutputStream(file);
@@ -148,11 +165,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener{
 //            e.printStackTrace();
 //        }
 
-        String passStatus = "Finish";
-        new AlertDialog.Builder(this.getContext())
-                .setTitle(passStatus)
-                .setMessage("Finish All The Questions! \n you can start again whenever you want!")
-                .show();
+
         currentQuestionIndex=0;
         loadNewQuestions();
     }
