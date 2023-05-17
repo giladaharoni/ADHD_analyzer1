@@ -1,27 +1,27 @@
 package com.example.adhd_analyzer.entities;
 
 public class QAarray {
-    int question;
+    int questionNumber;
     int answer;
 
     public QAarray(int question, int answer){
+        this.questionNumber = question;
         this.answer = answer;
-        this.question = question;
     }
 
     public int getAnswer() {
         return answer;
     }
 
-    public int getQuestion() {
-        return question;
+    public int getQuestionNumber() {
+        return questionNumber;
     }
 
     public void setAnswer(int answer) {
         this.answer = answer;
     }
 
-    public void setQuestion(int question) {
-        this.question = question;
+    public void setQuestionNumber(int questionNumber) {
+        this.questionNumber = questionNumber;
     }
 }

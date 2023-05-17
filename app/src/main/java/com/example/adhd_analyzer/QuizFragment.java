@@ -160,7 +160,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener{
 
 
         }
-
+        username = login.theUser.getUserName();
         Context context = this.getContext();
         WebServiceApi api = UserApi.getRetrofitInstance().create(WebServiceApi.class);
         Call<Void> call = api.uploadQuizAnswers(username, listJson);
@@ -210,6 +210,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener{
                 return;
             }
             QuestionAnswer.answers[currentQuestionIndex] = selectedAnswer;
+            selectedAnswer = "";
             currentQuestionIndex++;
             loadNewQuestions();
 
