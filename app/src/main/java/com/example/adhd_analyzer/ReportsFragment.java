@@ -19,6 +19,8 @@ import java.io.File;
 
 import static androidx.core.content.ContextCompat.getSystemService;
 
+import com.example.adhd_analyzer.logger_sensors.ModuleDB;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ReportsFragment#newInstance} factory method to
@@ -79,21 +81,8 @@ public class ReportsFragment extends Fragment {
 
         // Find the download button by its ID and set an OnClickListener
         Button downloadButton = view.findViewById(R.id.download_button);
-//        downloadButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Create a new Intent to send the file to another app
-//                Intent intent = new Intent(Intent.ACTION_SEND);
-//                intent.setType("text/plain");
-//                intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + QuizFragment.files[0]));
-//
-//                // Add the code for downloading the file using Download Manager
-//                DownloadManager downloadManager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
-//                DownloadManager.Request request = new DownloadManager.Request(Uri.parse("file://" + QuizFragment.files[0]));
-//                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-//                downloadManager.enqueue(request);
-//            }
-//        });
+        //ModuleDB.getProcessedDB(this.getContext()).processedDataDao().index();
+
 
         return view;
     }

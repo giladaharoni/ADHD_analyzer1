@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import com.example.adhd_analyzer.api.UserApi;
 import com.example.adhd_analyzer.api.WebServiceApi;
+import com.example.adhd_analyzer.logger_sensors.ModuleDB;
+import com.example.adhd_analyzer.user.UserDetails;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -84,10 +86,12 @@ public class SettingFragment extends Fragment {
         logoutClick.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
+                 UserDetails details = new UserDetails(login.theUser.getFullName(),login.theUser.getUserName(),login.theUser.getPassword());
+                 ModuleDB.getUserDetailsDB(v.getContext()).userDao().delete(details);
                  login.theUser.setUserName("");
                  login.theUser.setFullName("");
                  login.theUser.setPassword("");
-                 Intent intent = new Intent(getActivity(), login.class);
+                 Intent intent = new Intent(getActivity(), MainActivity.class);
                  startActivity(intent);
                  getActivity().finish();
              }
