@@ -15,6 +15,7 @@ public interface UserDao {
 
     @Insert
     void insert(UserDetails... userDetails);
+    @SuppressWarnings("unused")
     @Update
     void update(UserDetails... userDetails);
     @Delete

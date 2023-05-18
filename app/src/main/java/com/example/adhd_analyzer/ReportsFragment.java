@@ -70,20 +70,18 @@ public class ReportsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        List<ProcessedData> data = ModuleDB.getProcessedDB(this.getContext()).processedDataDao().index();
-        View view;
-        if (data.isEmpty()){
-            view = inflater.inflate(R.layout.fragment_reports_fragment, container, false);
-        } else {
-            view = inflater.inflate(R.layout.fragment_report_unit,container,false);
-            Pie pie = AnyChart.pie();
-            float generalRatio = (float)data.stream().filter(ProcessedData::isHighAdhd).count() /
-                    (float)data.stream().filter(ProcessedData::isStayInPlace).count();
-
-
-
-
-        }
+//        List<ProcessedData> data = ModuleDB.getProcessedDB(this.getContext()).processedDataDao().index();
+//        View view;
+//        if (data.isEmpty()){
+//            view = inflater.inflate(R.layout.fragment_reports_fragment, container, false);
+//        } else {
+//            view = inflater.inflate(R.layout.fragment_report_unit,container,false);
+//            Pie pie = AnyChart.pie();
+//            float generalRatio = (float)data.stream().filter(ProcessedData::isHighAdhd).count() /
+//                    (float)data.stream().filter(ProcessedData::isStayInPlace).count();
+//
+//        }
+        View view = inflater.inflate(R.layout.fragment_reports_fragment,container,false);
 
         // Find the download button by its ID and set an OnClickListener
         Button downloadButton = view.findViewById(R.id.download_button);
