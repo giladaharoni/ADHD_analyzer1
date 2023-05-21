@@ -56,7 +56,7 @@ public class QuestionAnswer {
             "50) Restlessness, activity",
             "51) Dependent on others to maintain order and attention to detail",
             "52) Unintentionally disturbs others",
-            "53) Sometimes the attention is so focused that he doesn't notice other things and sometimes he is bored so that everything distracts him",
+            "53) His attention fluctuates between intense focus and easy distraction.",
             "54) Tendency to frenzy or to fidget nervously",
             "55) Pay attention only to things that interest him",
             "56) Not always sure of his abilities to succeed in different fields",

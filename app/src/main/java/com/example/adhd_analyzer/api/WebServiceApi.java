@@ -1,6 +1,8 @@
 package com.example.adhd_analyzer.api;
+import com.example.adhd_analyzer.QuestionAnswer;
 import com.example.adhd_analyzer.entities.Answer;
 import com.example.adhd_analyzer.entities.Data;
+import com.example.adhd_analyzer.entities.QAUobjects;
 import com.example.adhd_analyzer.entities.QAarray;
 import com.example.adhd_analyzer.entities.User;
 import com.example.adhd_analyzer.logger_sensors.ProcessedData;
@@ -36,8 +38,8 @@ public interface WebServiceApi {
     Call<List<Answer>> getAnswers();
 
 
-    @GET("QuizAnswers/{username}")
-    Call<List<Void>> getQuizAnswersByUser(@Path("username") String username);
+    @GET("QuizAnswers")
+    Call<List<QAUobjects>> getQuizAnswersByUser(@Query("username") String username);
 
 
     @POST("QuizAnswers")
