@@ -6,6 +6,8 @@ import com.example.adhd_analyzer.entities.Data;
 import com.example.adhd_analyzer.entities.QAUobjects;
 import com.example.adhd_analyzer.entities.QAarray;
 import com.example.adhd_analyzer.entities.User;
+import com.example.adhd_analyzer.logger_sensors.ProcessedDataDB;
+import com.example.adhd_analyzer.logger_sensors.processedDataDao;
 import com.example.adhd_analyzer.user.UserDetails;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -23,6 +25,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.graphics.pdf.PdfDocument;
@@ -46,7 +49,9 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static androidx.core.content.ContextCompat.getSystemService;
@@ -106,22 +111,6 @@ public class ReportsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-////        List<ProcessedData> data = ModuleDB.getProcessedDB(this.getContext()).processedDataDao().index();
-////        View view;
-////        if (data.isEmpty()){
-////            view = inflater.inflate(R.layout.fragment_reports_fragment, container, false);
-////        } else {
-////            view = inflater.inflate(R.layout.fragment_report_unit,container,false);
-////            Pie pie = AnyChart.pie();
-////            float generalRatio = (float)data.stream().filter(ProcessedData::isHighAdhd).count() /
-////                    (float)data.stream().filter(ProcessedData::isStayInPlace).count();
-////
-////        }
-//        View view = inflater.inflate(R.layout.fragment_reports_fragment,container,false);
-//
-//        // Find the download button by its ID and set an OnClickListener
-//        Button downloadButton = view.findViewById(R.id.download_button);
-
 
         View view = inflater.inflate(R.layout.fragment_report_unit, container, false);
 
@@ -167,19 +156,40 @@ public class ReportsFragment extends Fragment {
 
         // Create an ArrayList of Entry objects to hold your data points
         ArrayList<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(0, 4));
-        entries.add(new Entry(1, 8));
-        entries.add(new Entry(2, 6));
-        entries.add(new Entry(3, 2));
-        entries.add(new Entry(4, 7));
-        entries.add(new Entry(5, 4));
-        entries.add(new Entry(6, 8));
-        entries.add(new Entry(7, 6));
-        entries.add(new Entry(8, 2));
-        entries.add(new Entry(9, 7));
+
+        ProcessedDataDB dataDB = ModuleDB.getProcessedDB(getContext());
+        processedDataDao dataDao = dataDB.processedDataDao();
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<ProcessedData> data = ModuleDB.getProcessedDB(getContext()).processedDataDao().index();
+
+            }
+        });
+
+//        entries.add(new Entry(0, 4));
+//        entries.add(new Entry(1, 8));
+//        entries.add(new Entry(2, 6));
+//        entries.add(new Entry(3, 2));
+//        entries.add(new Entry(4, 7));
+//        entries.add(new Entry(5, 4));
+//        entries.add(new Entry(6, 8));
+//        entries.add(new Entry(7, 6));
+//        entries.add(new Entry(8, 2));
+//        entries.add(new Entry(9, 7));
+//        entries.add(new Entry(10, 4));
+//        entries.add(new Entry(11, 8));
+//        entries.add(new Entry(12, 6));
+//        entries.add(new Entry(13, 2));
+//        entries.add(new Entry(14, 7));
+//        entries.add(new Entry(15, 4));
+//        entries.add(new Entry(16, 8));
+//        entries.add(new Entry(17, 6));
+//        entries.add(new Entry(18, 2));
+//        entries.add(new Entry(19, 7));
 
         // Create a LineDataSet from the entries
-        LineDataSet dataSet = new LineDataSet(entries, "Line Data");
+        LineDataSet dataSet = new LineDataSet(entries, "Function Data");
 
         // Customize the LineDataSet with desired styling options
         dataSet.setColor(Color.BLUE);
@@ -193,24 +203,32 @@ public class ReportsFragment extends Fragment {
 
         // Customize the chart appearance and behavior
         chart.getDescription().setText("My Line Chart");
-        chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        chart.getAxisLeft().setAxisMinimum(0f);
-        chart.getAxisRight().setEnabled(false);
+        chart.setExtraOffsets(10f, 10f, 10f, 10f);
 
-        // Measure the size of the chart
-        int chartWidth = 500;
-        int chartHeight = 500;
-        int chartLeft = 50;
-        int chartTop = 50;
+        // Calculate the available width and height for the chart
+        int chartWidth = canvas.getWidth() - (chart.getPaddingLeft() + chart.getPaddingRight());
+        int chartHeight = canvas.getHeight() - (chart.getPaddingTop() + chart.getPaddingBottom());
+
+        // Create LayoutParams object and set the calculated width and height
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(chartWidth, chartHeight);
+        chart.setLayoutParams(layoutParams);
+
+        // Measure and layout the chart view
+        chart.measure(View.MeasureSpec.makeMeasureSpec(chartWidth, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(chartHeight, View.MeasureSpec.EXACTLY));
+        chart.layout(0, 0, chart.getMeasuredWidth(), chart.getMeasuredHeight());
 
         // Render the chart onto a Bitmap
         Bitmap chartBitmap = Bitmap.createBitmap(chartWidth, chartHeight, Bitmap.Config.ARGB_8888);
         Canvas chartCanvas = new Canvas(chartBitmap);
         chart.draw(chartCanvas);
 
+        // Position the chart on the page
+        int chartLeft = (canvas.getWidth() - chartBitmap.getWidth()) / 2;
+        int chartTop = (canvas.getHeight() - chartBitmap.getHeight()) / 2;
+
         // Draw the chart bitmap onto the PDF page's canvas
         canvas.drawBitmap(chartBitmap, chartLeft, chartTop, null);
-
         // Finish the page
         document.finishPage(firstPage);
 
@@ -306,85 +324,5 @@ public class ReportsFragment extends Fragment {
         });
 
     }
-
-
-//    private void createAndDownloadPDF() {
-//        // Create a new PDF document
-//        PdfDocument document = new PdfDocument();
-//
-//        // Create a page with the desired attributes
-//        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(600, 800, 1).create();
-//        PdfDocument.Page page = document.startPage(pageInfo);
-//
-//        // Create a canvas to draw the content onto the page
-//        Canvas canvas = page.getCanvas();
-//
-//        // Create your graph using MPAndroidChart
-//        LineChart chart = new LineChart(getContext());
-//
-//        // Create an ArrayList of Entry objects to hold your data points
-//        ArrayList<Entry> entries = new ArrayList<>();
-//        entries.add(new Entry(0, 4));
-//        entries.add(new Entry(1, 8));
-//        entries.add(new Entry(2, 6));
-//        entries.add(new Entry(3, 2));
-//        entries.add(new Entry(4, 7));
-//
-//        // Create a LineDataSet from the entries
-//        LineDataSet dataSet = new LineDataSet(entries, "Line Data");
-//
-//        // Customize the LineDataSet with desired styling options
-//        dataSet.setColor(Color.BLUE);
-//        dataSet.setValueTextColor(Color.BLACK);
-//
-//        // Create a LineData object from the LineDataSet
-//        LineData lineData = new LineData(dataSet);
-//
-//        // Set the LineData to the chart
-//        chart.setData(lineData);
-//
-//        // Customize the chart appearance and behavior
-//        chart.getDescription().setText("My Line Chart");
-//        chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-//        chart.getAxisLeft().setAxisMinimum(0f);
-//        chart.getAxisRight().setEnabled(false);
-//
-//        // Measure the size of the chart
-//        int chartWidth = 500;
-//        int chartHeight = 500;
-//        int chartLeft = 50;
-//        int chartTop = 50;
-//
-//        // Render the chart onto a Bitmap
-//        Bitmap chartBitmap = Bitmap.createBitmap(chartWidth, chartHeight, Bitmap.Config.ARGB_8888);
-//        Canvas chartCanvas = new Canvas(chartBitmap);
-//        chart.draw(chartCanvas);
-//
-//        // Draw the chart bitmap onto the PDF page's canvas
-//        canvas.drawBitmap(chartBitmap, chartLeft, chartTop, null);
-//
-//
-//
-//        // Finish the page
-//        document.finishPage(page);
-//
-//        // Save the document to a file
-//        File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-//        File file = new File(directory, "example.pdf");
-//
-//        try {
-//            FileOutputStream fos = new FileOutputStream(file);
-//            document.writeTo(fos);
-//            document.close();
-//            fos.close();
-//
-//            // Show a toast message to indicate that the PDF file was created and downloaded successfully
-//            Toast.makeText(getContext(), "PDF file created and downloaded", Toast.LENGTH_SHORT).show();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            // Show a toast message if an error occurs while creating or downloading the PDF file
-//            Toast.makeText(getContext(), "Error creating or downloading PDF file", Toast.LENGTH_SHORT).show();
-//        }
-//    }
 
 }
