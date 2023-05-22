@@ -72,7 +72,7 @@ import com.itextpdf.awt.geom.Line2D;
 public class ReportsFragment extends Fragment {
 
 
-    private static final int STORAGE_PERMISSION_REQUEST_CODE = 1;
+    private static final int STORAGE_PERMISSION_REQUEST_CODE = 23;
 
     private Button downloadButton;
 
@@ -126,6 +126,7 @@ public class ReportsFragment extends Fragment {
                         ActivityCompat.requestPermissions(getActivity(),
                                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                 STORAGE_PERMISSION_REQUEST_CODE);
+                        createAndDownloadPDF();
                         return;
                     }
                 }
