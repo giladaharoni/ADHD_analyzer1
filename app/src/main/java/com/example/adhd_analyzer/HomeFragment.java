@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -104,7 +105,9 @@ public class HomeFragment extends Fragment {
 
                 } else{
                     checkRequest();
-                    getActivity().startService(new Intent(view.getContext(), SensorsRecordsService.class));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        getActivity().startForegroundService(new Intent(view.getContext(), SensorsRecordsService.class));
+                    }
                     tracking.setText(R.string.stop_tracking);
                     buttonStateViewModel.setButtonClickableState(false);
                     new Handler().postDelayed(new Runnable() {

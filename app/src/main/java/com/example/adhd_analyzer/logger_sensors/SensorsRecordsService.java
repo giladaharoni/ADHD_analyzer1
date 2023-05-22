@@ -91,8 +91,26 @@ public class SensorsRecordsService extends Service implements SensorEventListene
 
             }
         }, DELAY_IN_MILLIS);
-
-
+        final String CHANNELID = "Foreground Service ID";
+        NotificationChannel channel = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            channel = new NotificationChannel(
+                    CHANNELID,
+                    CHANNELID,
+                    NotificationManager.IMPORTANCE_LOW
+            );
+            getSystemService(NotificationManager.class).createNotificationChannel(channel);
+            Intent notificationIntent = new Intent(this, home.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+                    notificationIntent, PendingIntent.FLAG_IMMUTABLE);
+            Notification.Builder notification = new Notification.Builder(this, CHANNELID)
+                    .setContentText("your tracking is active")
+                    .setContentTitle("Analyze ADHD")
+                    .setOngoing(true)
+                    .setContentIntent(pendingIntent)
+                    .setSmallIcon(R.drawable.ic_home_foreground);
+            startForeground(1001, notification.build());
+        }
 
         return START_STICKY;
     }
