@@ -14,6 +14,7 @@ import com.anychart.enums.TooltipPositionMode;
 import com.anychart.graphics.vector.Stroke;
 import com.example.adhd_analyzer.api.UserApi;
 import com.example.adhd_analyzer.api.WebServiceApi;
+import com.example.adhd_analyzer.entities.DataGet;
 import com.example.adhd_analyzer.entities.QAUobjects;
 
 import com.example.adhd_analyzer.logger_sensors.ProcessedDataDB;
@@ -116,106 +117,6 @@ public class ReportsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_report_unit, container, false);
-
-
-        AnyChartView anyChartView = view.findViewById(R.id.any_chart_view);
-        anyChartView.setProgressBar(view.findViewById(R.id.progress_bar));
-
-        Cartesian cartesian = AnyChart.line();
-
-        cartesian.animation(true);
-
-        cartesian.padding(10d, 20d, 5d, 20d);
-
-        cartesian.crosshair().enabled(true);
-        cartesian.crosshair()
-                .yLabel(true)
-                // TODO ystroke
-                .yStroke((Stroke) null, null, null, (String) null, (String) null);
-
-        cartesian.tooltip().positionMode(TooltipPositionMode.POINT);
-
-        cartesian.title("Trend of Sales of the Most Popular Products of ACME Corp.");
-
-        cartesian.yAxis(0).title("Number of Bottles Sold (thousands)");
-        cartesian.xAxis(0).labels().padding(5d, 5d, 5d, 5d);
-
-        List<DataEntry> seriesData = new ArrayList<>();
-        seriesData.add(new CustomDataEntry("1986", 3.6, 2.3, 2.8));
-        seriesData.add(new CustomDataEntry("1987", 7.1, 4.0, 4.1));
-        seriesData.add(new CustomDataEntry("1988", 8.5, 6.2, 5.1));
-        seriesData.add(new CustomDataEntry("1989", 9.2, 11.8, 6.5));
-        seriesData.add(new CustomDataEntry("1990", 10.1, 13.0, 12.5));
-        seriesData.add(new CustomDataEntry("1991", 11.6, 13.9, 18.0));
-        seriesData.add(new CustomDataEntry("1992", 16.4, 18.0, 21.0));
-        seriesData.add(new CustomDataEntry("1993", 18.0, 23.3, 20.3));
-        seriesData.add(new CustomDataEntry("1994", 13.2, 24.7, 19.2));
-        seriesData.add(new CustomDataEntry("1995", 12.0, 18.0, 14.4));
-        seriesData.add(new CustomDataEntry("1996", 3.2, 15.1, 9.2));
-        seriesData.add(new CustomDataEntry("1997", 4.1, 11.3, 5.9));
-        seriesData.add(new CustomDataEntry("1998", 6.3, 14.2, 5.2));
-        seriesData.add(new CustomDataEntry("1999", 9.4, 13.7, 4.7));
-        seriesData.add(new CustomDataEntry("2000", 11.5, 9.9, 4.2));
-        seriesData.add(new CustomDataEntry("2001", 13.5, 12.1, 1.2));
-        seriesData.add(new CustomDataEntry("2002", 14.8, 13.5, 5.4));
-        seriesData.add(new CustomDataEntry("2003", 16.6, 15.1, 6.3));
-        seriesData.add(new CustomDataEntry("2004", 18.1, 17.9, 8.9));
-        seriesData.add(new CustomDataEntry("2005", 17.0, 18.9, 10.1));
-        seriesData.add(new CustomDataEntry("2006", 16.6, 20.3, 11.5));
-        seriesData.add(new CustomDataEntry("2007", 14.1, 20.7, 12.2));
-        seriesData.add(new CustomDataEntry("2008", 15.7, 21.6, 10));
-        seriesData.add(new CustomDataEntry("2009", 12.0, 22.5, 8.9));
-
-        Set set = Set.instantiate();
-        set.data(seriesData);
-        Mapping series1Mapping = set.mapAs("{ x: 'x', value: 'value' }");
-        Mapping series2Mapping = set.mapAs("{ x: 'x', value: 'value2' }");
-        Mapping series3Mapping = set.mapAs("{ x: 'x', value: 'value3' }");
-
-        Line series1 = cartesian.line(series1Mapping);
-        series1.name("Brandy");
-        series1.hovered().markers().enabled(true);
-        series1.hovered().markers()
-                .type(MarkerType.CIRCLE)
-                .size(4d);
-        series1.tooltip()
-                .position("right")
-                .anchor(Anchor.LEFT_CENTER)
-                .offsetX(5d)
-                .offsetY(5d);
-
-        Line series2 = cartesian.line(series2Mapping);
-        series2.name("Whiskey");
-        series2.hovered().markers().enabled(true);
-        series2.hovered().markers()
-                .type(MarkerType.CIRCLE)
-                .size(4d);
-        series2.tooltip()
-                .position("right")
-                .anchor(Anchor.LEFT_CENTER)
-                .offsetX(5d)
-                .offsetY(5d);
-
-        Line series3 = cartesian.line(series3Mapping);
-        series3.name("Tequila");
-        series3.hovered().markers().enabled(true);
-        series3.hovered().markers()
-                .type(MarkerType.CIRCLE)
-                .size(4d);
-        series3.tooltip()
-                .position("right")
-                .anchor(Anchor.LEFT_CENTER)
-                .offsetX(5d)
-                .offsetY(5d);
-
-        cartesian.legend().enabled(true);
-        cartesian.legend().fontSize(13d);
-        cartesian.legend().padding(0d, 0d, 10d, 0d);
-
-        anyChartView.setChart(cartesian);
-        anyChartView.setBackgroundColor(getResources().getColor(R.color.black));
-
-
         downloadButton = view.findViewById(R.id.download_button);
         downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -260,16 +161,19 @@ public class ReportsFragment extends Fragment {
         // Create an ArrayList of Entry objects to hold your data points
         ArrayList<Entry> entries = new ArrayList<>();
 
-        ProcessedDataDB dataDB = ModuleDB.getProcessedDB(getContext());
-        processedDataDao dataDao = dataDB.processedDataDao();
-        AsyncTask.execute(new Runnable() {
+
+        WebServiceApi api = UserApi.getRetrofitInstance().create(WebServiceApi.class);
+        String username = ModuleDB.getUserDetailsDB(getContext()).userDao().index().get(0).getUserName().toString();
+        Call<List<DataGet>> callii = api.getDatas(username, 123);
+        callii.enqueue(new Callback<List<DataGet>>() {
             @Override
-            public void run() {
-                List<ProcessedData> data = ModuleDB.getProcessedDB(getContext()).processedDataDao().index();
-                int precent, counter;
-                for (int i = 0; i < data.size(); i = i + 15) {
+            public void onResponse(Call<List<DataGet>> call, Response<List<DataGet>> response) {
+                List<DataGet> data = response.body();
+                float counter;
+                float precent;
+                for (int i = 0; i < data.size(); i = i + 30) {
                     counter = 0;
-                    for (int j = 0; j < 15; j++) {
+                    for (int j = 0; j < 30; j++) {
                         if ((i+j)< data.size()) {
                             if (data.get(i + j).isHighAdhd()) {
                                 counter++;
@@ -283,38 +187,18 @@ public class ReportsFragment extends Fragment {
 
                     // Format the date as a string using the desired format
                     String formattedDate = sdf.format(date);
-                    precent = (counter / 15) * 100;
-                    entries.add(new Entry(i, precent));
+                    precent = (counter / 30) * 100;
+                    float q = (float) (i/60.0);
+                    entries.add(new Entry(q, precent));
                 }
 
-
-//        entries.add(new Entry(0, 4));
-//        entries.add(new Entry(1, 8));
-//        entries.add(new Entry(2, 6));
-//        entries.add(new Entry(3, 2));
-//        entries.add(new Entry(4, 7));
-//        entries.add(new Entry(5, 4));
-//        entries.add(new Entry(6, 8));
-//        entries.add(new Entry(7, 6));
-//        entries.add(new Entry(8, 2));
-//        entries.add(new Entry(9, 7));
-//        entries.add(new Entry(10, 4));
-//        entries.add(new Entry(11, 8));
-//        entries.add(new Entry(12, 6));
-//        entries.add(new Entry(13, 2));
-//        entries.add(new Entry(14, 7));
-//        entries.add(new Entry(15, 4));
-//        entries.add(new Entry(16, 8));
-//        entries.add(new Entry(17, 6));
-//        entries.add(new Entry(18, 2));
-//        entries.add(new Entry(19, 7));
-
                 // Create a LineDataSet from the entries
-                LineDataSet dataSet = new LineDataSet(entries, "Function Data");
+                LineDataSet dataSet = new LineDataSet(entries, "level of ADHD");
 
                 // Customize the LineDataSet with desired styling options
                 dataSet.setColor(Color.BLUE);
                 dataSet.setValueTextColor(Color.BLACK);
+                dataSet.setDrawValues(false);
 
                 // Create a LineData object from the LineDataSet
                 LineData lineData = new LineData(dataSet);
@@ -323,7 +207,7 @@ public class ReportsFragment extends Fragment {
                 chart.setData(lineData);
 
                 // Customize the chart appearance and behavior
-                chart.getDescription().setText("My Line Chart");
+                chart.getDescription().setText("Precent of ADHD diagnosis");
                 chart.setExtraOffsets(10f, 10f, 10f, 10f);
 
                 // Calculate the available width and height for the chart
@@ -374,10 +258,9 @@ public class ReportsFragment extends Fragment {
                 // Write the text on the PDF page's canvas
                 canvas2.drawText(text.toString(), textX, textY, textPaint);
 
-                WebServiceApi api = UserApi.getRetrofitInstance().create(WebServiceApi.class);
-                String username = ModuleDB.getUserDetailsDB(getContext()).userDao().index().get(0).getUserName().toString();
-                Call<List<QAUobjects>> call = api.getQuizAnswersByUser(username);
-                call.enqueue(new Callback<List<QAUobjects>>() {
+
+                Call<List<QAUobjects>> call2 = api.getQuizAnswersByUser(username);
+                call2.enqueue(new Callback<List<QAUobjects>>() {
                     @Override
                     public void onResponse(Call<List<QAUobjects>> call, Response<List<QAUobjects>> response) {
                         if (response.body() != null) {
@@ -443,6 +326,11 @@ public class ReportsFragment extends Fragment {
                         Toast.makeText(getContext(), "Error creating or downloading PDF file BY QUIZ", Toast.LENGTH_SHORT).show();
                     }
                 });
+            }
+
+            @Override
+            public void onFailure(Call<List<DataGet>> call, Throwable t) {
+
             }
         });
     }

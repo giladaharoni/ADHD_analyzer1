@@ -2,6 +2,7 @@ package com.example.adhd_analyzer.api;
 import com.example.adhd_analyzer.QuestionAnswer;
 import com.example.adhd_analyzer.entities.Answer;
 import com.example.adhd_analyzer.entities.Data;
+import com.example.adhd_analyzer.entities.DataGet;
 import com.example.adhd_analyzer.entities.QAUobjects;
 import com.example.adhd_analyzer.entities.QAarray;
 import com.example.adhd_analyzer.entities.User;
@@ -29,8 +30,10 @@ public interface WebServiceApi {
     @PUT("users")
     Call<Void> updateUser(@Query("username") String username, @Query("fullname") String fullname, @Query("password") String password);
 
-    @GET("data")
-    Call<List<Data>> getDatas();
+    @GET("ProcessData")
+    Call<List<DataGet>> getDatas(@Query("username") String username, @Query("session") int session);
+
+
 
     @POST("ProcessData")
     Call<Void> uploadData(@Query("username") String username,@Body List<ProcessedData> dataList);
