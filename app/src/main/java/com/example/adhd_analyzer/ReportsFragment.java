@@ -31,6 +31,7 @@ import com.github.mikephil.charting.data.Entry;
 import android.Manifest;
 
 import android.annotation.SuppressLint;
+import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -48,6 +49,8 @@ import android.graphics.pdf.PdfDocument;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -57,6 +60,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import java.io.File;
@@ -89,6 +93,7 @@ public class ReportsFragment extends Fragment {
     private static final int STORAGE_PERMISSION_REQUEST_CODE = 23;
 
     private Button downloadButton;
+    private FrameLayout graphContainer;
     private List<QAUobjects> answers;
     private List<DataGet> dataGetList;
     List<Chart> charts = new ArrayList<>();
@@ -133,6 +138,8 @@ public class ReportsFragment extends Fragment {
         getAnswers();
         getDataBySession(123);
         downloadButton = view.findViewById(R.id.download_button);
+        graphContainer = view.findViewById(R.id.graph_container);
+
 
         downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,10 +162,21 @@ public class ReportsFragment extends Fragment {
                }
         });
 
-        //Chart chart = magic_function()
 
 
         return view;
+    }
+
+
+    private void addChartToLayout(Chart chart, FrameLayout chartContainer) {
+
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+        );
+        chart.setLayoutParams(layoutParams);
+
+        chartContainer.addView(chart);
     }
 
     private Chart pieChartGraph(){
@@ -283,6 +301,7 @@ public class ReportsFragment extends Fragment {
             public void onResponse(Call<List<DataGet>> call, Response<List<DataGet>> response) {
                 dataGetList = response.body();
                 charts.add(lineChartGraph());
+                addChartToLayout(charts.get(0),graphContainer);
                 //charts.add(pieChartGraph());
             }
 
@@ -376,6 +395,17 @@ public class ReportsFragment extends Fragment {
             document.writeTo(fos);
             document.close();
             fos.close();
+            Uri pdfUri = Uri.fromFile(file);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(pdfUri, "application/pdf");
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+            try {
+                startActivity(intent);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(getContext(), "No PDF viewer app installed", Toast.LENGTH_SHORT).show();
+            }
+
 
 
             // Show a toast message to indicate that the PDF file was created and downloaded successfully
