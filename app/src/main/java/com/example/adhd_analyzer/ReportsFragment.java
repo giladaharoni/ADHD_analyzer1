@@ -48,6 +48,7 @@ import android.graphics.pdf.PdfDocument;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -395,14 +396,14 @@ public class ReportsFragment extends Fragment {
             document.writeTo(fos);
             document.close();
             fos.close();
-            Uri pdfUri = Uri.fromFile(file);
+            Uri pdfUri = FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file);
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setDataAndType(pdfUri, "application/pdf");
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
             try {
-                startActivity(intent);
-            } catch (ActivityNotFoundException e) {
+                startActivity(Intent.createChooser(intent,"open pdf"));
+            } catch (ActivityNotFoundException  e) {
                 Toast.makeText(getContext(), "No PDF viewer app installed", Toast.LENGTH_SHORT).show();
             }
 
