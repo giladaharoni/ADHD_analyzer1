@@ -30,12 +30,15 @@ import com.github.mikephil.charting.data.Entry;
 import android.Manifest;
 
 import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -79,6 +82,9 @@ public class ReportsFragment extends Fragment {
     private static final int STORAGE_PERMISSION_REQUEST_CODE = 23;
 
     private Button downloadButton;
+    private List<QAUobjects> answers;
+    private List<DataGet> dataGetList;
+    List<Chart> charts = new ArrayList<>();
 
 
     public ReportsFragment() {
@@ -117,7 +123,10 @@ public class ReportsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_report_unit, container, false);
+        getAnswers();
+        getDataBySession(123);
         downloadButton = view.findViewById(R.id.download_button);
+
         downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,13 +138,13 @@ public class ReportsFragment extends Fragment {
                         ActivityCompat.requestPermissions(getActivity(),
                                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                 STORAGE_PERMISSION_REQUEST_CODE);
-                        createAndDownloadPDF();
+                        DownloadPDF(charts,answers);
                         return;
                     }
                 }
                 // If permission is already granted or on older Android versions,
                 // directly create and download the PDF
-                createAndDownloadPDF();
+                DownloadPDF(charts,answers);
                }
         });
 
@@ -152,208 +161,170 @@ public class ReportsFragment extends Fragment {
     // pie chart
 
     // histogram
-
-
-
-    private void createAndDownloadPDF() {
-        // Create a new PDF document
-        PdfDocument document = new PdfDocument();
-
-        // Create a page with the desired attributes
-        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(600, 800, 1).create();
-        PdfDocument.Page firstPage = document.startPage(pageInfo);
-
-        // Create a canvas to draw the content onto the page
-        Canvas canvas = firstPage.getCanvas();
-
-        // Create your graph using MPAndroidChart
+    private Chart lineChartGraph(){
         LineChart chart = new LineChart(getContext());
-
-        // Create an ArrayList of Entry objects to hold your data points
         ArrayList<Entry> entries = new ArrayList<>();
+        float counter;
+        float precent;
+        for (int i = 0; i < dataGetList.size(); i = i + 30) {
+            counter = 0;
+            for (int j = 0; j < 30; j++) {
+                if ((i+j)< dataGetList.size()) {
+                    if (dataGetList.get(i + j).isHighAdhd()) {
+                        counter++;
+                    }
+                }
+            }
+            precent = (counter / 30) * 100;
+            float q = (float) (i/60.0);
+            entries.add(new Entry(q, precent));
+        }
+        LineDataSet dataSet = new LineDataSet(entries, "level of ADHD");
 
+        // Customize the LineDataSet with desired styling options
+        dataSet.setColor(Color.BLUE);
+        dataSet.setValueTextColor(Color.BLACK);
+        dataSet.setDrawValues(false);
 
+        // Create a LineData object from the LineDataSet
+        LineData lineData = new LineData(dataSet);
+
+        // Set the LineData to the chart
+        chart.setData(lineData);
+
+        // Customize the chart appearance and behavior
+        chart.getDescription().setText("Precent of ADHD diagnosis");
+        chart.setExtraOffsets(10f, 10f, 10f, 10f);
+        return chart;
+    }
+    private void getAnswers(){
         WebServiceApi api = UserApi.getRetrofitInstance().create(WebServiceApi.class);
         String username = ModuleDB.getUserDetailsDB(getContext()).userDao().index().get(0).getUserName().toString();
-        Call<List<DataGet>> callii = api.getDatas(username, 123);
-        callii.enqueue(new Callback<List<DataGet>>() {
+        Call<List<QAUobjects>> call2 = api.getQuizAnswersByUser(username);
+        call2.enqueue(new Callback<List<QAUobjects>>() {
             @Override
-            public void onResponse(Call<List<DataGet>> call, Response<List<DataGet>> response) {
-                List<DataGet> data = response.body();
-                float counter;
-                float precent;
-                for (int i = 0; i < data.size(); i = i + 30) {
-                    counter = 0;
-                    for (int j = 0; j < 30; j++) {
-                        if ((i+j)< data.size()) {
-                            if (data.get(i + j).isHighAdhd()) {
-                                counter++;
-                            }
-                        }
-                    }
-                    Date date = new Date(data.get(i).getTimestamp());
-
-                    // Create a SimpleDateFormat object to specify the desired date format
-                    SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm:ss");
-
-                    // Format the date as a string using the desired format
-                    String formattedDate = sdf.format(date);
-                    precent = (counter / 30) * 100;
-                    float q = (float) (i/60.0);
-                    entries.add(new Entry(q, precent));
-                }
-
-                // Create a LineDataSet from the entries
-                LineDataSet dataSet = new LineDataSet(entries, "level of ADHD");
-
-                // Customize the LineDataSet with desired styling options
-                dataSet.setColor(Color.BLUE);
-                dataSet.setValueTextColor(Color.BLACK);
-                dataSet.setDrawValues(false);
-
-                // Create a LineData object from the LineDataSet
-                LineData lineData = new LineData(dataSet);
-
-                // Set the LineData to the chart
-                chart.setData(lineData);
-
-                // Customize the chart appearance and behavior
-                chart.getDescription().setText("Precent of ADHD diagnosis");
-                chart.setExtraOffsets(10f, 10f, 10f, 10f);
-
-                // Calculate the available width and height for the chart
-                int chartWidth = canvas.getWidth() - (chart.getPaddingLeft() + chart.getPaddingRight());
-                int chartHeight = canvas.getHeight() - (chart.getPaddingTop() + chart.getPaddingBottom());
-
-                // Create LayoutParams object and set the calculated width and height
-                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(chartWidth, chartHeight);
-                chart.setLayoutParams(layoutParams);
-
-                // Measure and layout the chart view
-                chart.measure(View.MeasureSpec.makeMeasureSpec(chartWidth, View.MeasureSpec.EXACTLY),
-                        View.MeasureSpec.makeMeasureSpec(chartHeight, View.MeasureSpec.EXACTLY));
-                chart.layout(0, 0, chart.getMeasuredWidth(), chart.getMeasuredHeight());
-
-                // Render the chart onto a Bitmap
-                Bitmap chartBitmap = Bitmap.createBitmap(chartWidth, chartHeight, Bitmap.Config.ARGB_8888);
-                Canvas chartCanvas = new Canvas(chartBitmap);
-                chart.draw(chartCanvas);
-
-                // Position the chart on the page
-                int chartLeft = (canvas.getWidth() - chartBitmap.getWidth()) / 2;
-                int chartTop = (canvas.getHeight() - chartBitmap.getHeight()) / 2;
-
-                // Draw the chart bitmap onto the PDF page's canvas
-                canvas.drawBitmap(chartBitmap, chartLeft, chartTop, null);
-                // Finish the page
-                document.finishPage(firstPage);
-
-                // Create the second page with the desired attributes
-                PdfDocument.PageInfo secondPageInfo = new PdfDocument.PageInfo.Builder(600, 800, 2).create();
-                PdfDocument.Page secondPage = document.startPage(secondPageInfo);
-                // Create a canvas to draw the content onto the page2
-                Canvas canvas2 = secondPage.getCanvas();
-
-                // Define text attributes
-                Paint textPaint = new Paint();
-                textPaint.setColor(Color.BLACK);
-                textPaint.setTextSize(9f);
-
-                // Calculate the position to write the text
-                float textX = 20;
-                float textY = 20;
-
-                String text1;
-                // Define the text to be written
-                StringBuilder text = new StringBuilder("The quiz answers:\n");
-                // Write the text on the PDF page's canvas
-                canvas2.drawText(text.toString(), textX, textY, textPaint);
-
-
-                Call<List<QAUobjects>> call2 = api.getQuizAnswersByUser(username);
-                call2.enqueue(new Callback<List<QAUobjects>>() {
-                    @Override
-                    public void onResponse(Call<List<QAUobjects>> call, Response<List<QAUobjects>> response) {
-                        if (response.body() != null) {
-                            for (int i = 0; i < response.body().size(); i++) {
-                                float textX = 20;
-                                float textY = 20 + (i * 11) + 11;
-                                switch (response.body().get(i).getAnswer()) {
-                                    case 1:
-                                        // Write the text on the PDF page's canvas
-                                        canvas2.drawText(QuestionAnswer.question[i] + ": Never", textX, textY, textPaint);
-                                        //text.append(QuestionAnswer.question[i]+": Never\n");
-                                        continue;
-                                    case 2:
-                                        // Write the text on the PDF page's canvas
-                                        canvas2.drawText(QuestionAnswer.question[i] + ": Rarely", textX, textY, textPaint);
-                                        //text.append(QuestionAnswer.question[i]+": Rarely\n");
-                                        continue;
-                                    case 3:
-                                        // Write the text on the PDF page's canvas
-                                        canvas2.drawText(QuestionAnswer.question[i] + ": Often", textX, textY, textPaint);
-                                        //text.append(QuestionAnswer.question[i]+": Often\n");
-                                        continue;
-                                    case 4:
-                                        // Write the text on the PDF page's canvas
-                                        canvas2.drawText(QuestionAnswer.question[i] + ": Very often", textX, textY, textPaint);
-                                        //text.append(QuestionAnswer.question[i]+": Very often\n");
-                                        continue;
-                                    default:
-                                        // Write the text on the PDF page's canvas
-                                        canvas2.drawText(QuestionAnswer.question[i] + ": ---", textX, textY, textPaint);
-                                        //text.append(QuestionAnswer.question[i]+": ---\n");
-                                }
-
-                            }
-                        }
-                        // Write the text on the PDF page's canvas
-                        //canvas.drawText(text.toString(), textX, textY, textPaint);
-
-                        // Finish the page
-                        document.finishPage(secondPage);
-
-                        // Save the document to a file
-                        File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                        File file = new File(directory, "example.pdf");
-
-                        try {
-                            FileOutputStream fos = new FileOutputStream(file);
-                            document.writeTo(fos);
-                            document.close();
-                            fos.close();
-
-                            // Show a toast message to indicate that the PDF file was created and downloaded successfully
-                            Toast.makeText(getContext(), "PDF file created and downloaded", Toast.LENGTH_SHORT).show();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            // Show a toast message if an error occurs while creating or downloading the PDF file
-                            Toast.makeText(getContext(), "Error creating or downloading PDF file", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<QAUobjects>> call, Throwable t) {
-                        Toast.makeText(getContext(), "Error creating or downloading PDF file BY QUIZ", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            public void onResponse(Call<List<QAUobjects>> call, Response<List<QAUobjects>> response) {
+                answers = response.body();
             }
 
             @Override
-            public void onFailure(Call<List<DataGet>> call, Throwable t) {
-
+            public void onFailure(Call<List<QAUobjects>> call, Throwable t) {
+                answers = new ArrayList<QAUobjects>();
             }
         });
     }
 
-    private class CustomDataEntry extends ValueDataEntry {
+    private void getDataBySession(int session){
+        WebServiceApi api = UserApi.getRetrofitInstance().create(WebServiceApi.class);
+        String username = ModuleDB.getUserDetailsDB(getContext()).userDao().index().get(0).getUserName().toString();
+        Call<List<DataGet>> call = api.getDatas(username, session);
+        call.enqueue(new Callback<List<DataGet>>() {
+            @Override
+            public void onResponse(Call<List<DataGet>> call, Response<List<DataGet>> response) {
+                dataGetList = response.body();
+                charts.add(lineChartGraph());
+            }
 
-        CustomDataEntry(String x, Number value, Number value2, Number value3) {
-            super(x, value);
-            setValue("value2", value2);
-            setValue("value3", value3);
+            @Override
+            public void onFailure(Call<List<DataGet>> call, Throwable t) {
+                dataGetList = new ArrayList<>();
+            }
+        });
+    }
+
+    private void AddQuestions(List<QAUobjects> answers, PdfDocument.Page page){
+        Canvas canvas2 = page.getCanvas();
+
+        // Define text attributes
+        Paint textPaint = new Paint();
+        textPaint.setColor(Color.BLACK);
+        textPaint.setTextSize(9f);
+
+        // Calculate the position to write the text
+        float textX = 20;
+        float textY = 20;
+
+        String text1;
+        // Define the text to be written
+        StringBuilder text = new StringBuilder("The quiz answers:\n");
+        // Write the text on the PDF page's canvas
+        canvas2.drawText(text.toString(), textX, textY, textPaint);
+        for (int i = 0; i < answers.size(); i++) {
+            textX = 20;
+            textY = 20 + (i * 11) + 11;
+            switch (answers.get(i).getAnswer()) {
+                case 1:
+                    canvas2.drawText(QuestionAnswer.question[i] + ": Never", textX, textY, textPaint);
+                    continue;
+                case 2:
+                    canvas2.drawText(QuestionAnswer.question[i] + ": Rarely", textX, textY, textPaint);
+                    continue;
+                case 3:
+                    canvas2.drawText(QuestionAnswer.question[i] + ": Often", textX, textY, textPaint);
+                    continue;
+                case 4:
+                    canvas2.drawText(QuestionAnswer.question[i] + ": Very often", textX, textY, textPaint);
+                    continue;
+                default:
+                    canvas2.drawText(QuestionAnswer.question[i] + ": ---", textX, textY, textPaint);
+            }
+
         }
 
     }
+
+    private void DownloadPDF(List<Chart> charts, List<QAUobjects> answers){
+        int pages = charts.size()+1;
+        PdfDocument document = new PdfDocument();
+        int pageNumber = 1;
+
+        for (Chart chart: charts) {
+            PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(600, 800, pageNumber).create();
+            pageNumber++;
+            PdfDocument.Page page = document.startPage(pageInfo);
+            Canvas canvas = page.getCanvas();
+            int chartWidth = canvas.getWidth() - (chart.getPaddingLeft() + chart.getPaddingRight());
+            int chartHeight = canvas.getHeight() - (chart.getPaddingTop() + chart.getPaddingBottom());
+            Bitmap chartBitmap = Bitmap.createBitmap(chartWidth, chartHeight, Bitmap.Config.ARGB_8888);
+            Canvas chartCanvas = new Canvas(chartBitmap);
+            chart.draw(chartCanvas);
+            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(chartWidth, chartHeight);
+            chart.setLayoutParams(layoutParams);
+
+            // Measure and layout the chart view
+            chart.measure(View.MeasureSpec.makeMeasureSpec(chartWidth, View.MeasureSpec.EXACTLY),
+                    View.MeasureSpec.makeMeasureSpec(chartHeight, View.MeasureSpec.EXACTLY));
+            chart.layout(0, 0, chart.getMeasuredWidth(), chart.getMeasuredHeight());
+
+            // Position the chart on the page
+            int chartLeft = (canvas.getWidth() - chartBitmap.getWidth()) / 2;
+            int chartTop = (canvas.getHeight() - chartBitmap.getHeight()) / 2;
+            canvas.drawBitmap(chartBitmap, chartLeft, chartTop, null);
+            // Finish the page
+            document.finishPage(page);
+
+        }
+        PdfDocument.PageInfo secondPageInfo = new PdfDocument.PageInfo.Builder(600, 800, pageNumber).create();
+        PdfDocument.Page secondPage = document.startPage(secondPageInfo);
+        AddQuestions(answers,secondPage);
+        document.finishPage(secondPage);
+        File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File file = new File(directory, "example.pdf");
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            document.writeTo(fos);
+            document.close();
+            fos.close();
+
+
+            // Show a toast message to indicate that the PDF file was created and downloaded successfully
+            Toast.makeText(getContext(), "PDF file created and downloaded", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Show a toast message if an error occurs while creating or downloading the PDF file
+            Toast.makeText(getContext(), "Error in saving the file file", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
 }
