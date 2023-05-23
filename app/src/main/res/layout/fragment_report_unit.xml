@@ -20,13 +20,19 @@
             android:paddingTop="20dp"
             android:text="Report from 12/34/5678"
             android:textAlignment="center"
-            android:textSize="32dp" />
+            android:textSize="32sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/graph_place"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                />
 
 
             <LinearLayout
@@ -38,37 +44,23 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/baseline_arrow_left_24"
                     android:backgroundTint="@color/myButtonColor" />
-
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/baseline_arrow_right_24"
                     android:backgroundTint="@color/myButtonColor" />
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+
 
             </LinearLayout>
 
         </LinearLayout>
 
-        <com.anychart.AnyChartView
-            android:id="@+id/any_chart_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
 
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
 
         <Button
             android:id="@+id/download_button"

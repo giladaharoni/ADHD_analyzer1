@@ -22,6 +22,7 @@ import com.example.adhd_analyzer.logger_sensors.processedDataDao;
 import com.example.adhd_analyzer.user.UserDetails;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -69,6 +70,12 @@ import java.util.List;
 
 import com.example.adhd_analyzer.logger_sensors.ModuleDB;
 import com.example.adhd_analyzer.logger_sensors.ProcessedData;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.MPPointF;
 
 
 /**
@@ -154,6 +161,54 @@ public class ReportsFragment extends Fragment {
         return view;
     }
 
+    private Chart pieChartGraph(){
+        PieChart chart = new PieChart(getContext());
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        long size = dataGetList.size();
+        long stayCount = dataGetList.stream().filter(DataGet::isStayInPlace).count();
+        long adhdCount = dataGetList.stream().filter(DataGet::isHighAdhd).count();
+        long NoStayInplace = (dataGetList.size() - stayCount);
+        long stayWithoutADHD = stayCount - adhdCount;
+        entries.add(new PieEntry((float)stayWithoutADHD/size,"stay in place without adhd"));
+        entries.add(new PieEntry((float)NoStayInplace/size,"no stay inplace"));
+        entries.add(new PieEntry((float)adhdCount/size,"ADHD while stay inplace"));
+        PieDataSet dataSet = new PieDataSet(entries, "Election Results");
+
+        dataSet.setDrawIcons(false);
+
+        dataSet.setSliceSpace(3f);
+        dataSet.setIconsOffset(new MPPointF(0, 40));
+        dataSet.setSelectionShift(5f);
+
+        // add a lot of colors
+
+        ArrayList<Integer> colors = new ArrayList<>();
+
+        for (int c : ColorTemplate.VORDIPLOM_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.JOYFUL_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.COLORFUL_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.LIBERTY_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.PASTEL_COLORS)
+            colors.add(c);
+
+        colors.add(ColorTemplate.getHoloBlue());
+
+        dataSet.setColors(colors);
+
+        PieData data = new PieData(dataSet);
+        chart.setData(data);
+        chart.highlightValues(null);
+        return chart;
+    }
+
 
     // line chart
 
@@ -161,8 +216,8 @@ public class ReportsFragment extends Fragment {
     // pie chart
 
     // histogram
-    private Chart lineChartGraph(){
-        LineChart chart = new LineChart(getContext());
+
+    private List<Entry> AdhdPerHalfHours(){
         ArrayList<Entry> entries = new ArrayList<>();
         float counter;
         float precent;
@@ -179,6 +234,11 @@ public class ReportsFragment extends Fragment {
             float q = (float) (i/60.0);
             entries.add(new Entry(q, precent));
         }
+        return entries;
+    }
+    private Chart lineChartGraph(){
+        LineChart chart = new LineChart(getContext());
+        List<Entry> entries = AdhdPerHalfHours();
         LineDataSet dataSet = new LineDataSet(entries, "level of ADHD");
 
         // Customize the LineDataSet with desired styling options
@@ -223,6 +283,7 @@ public class ReportsFragment extends Fragment {
             public void onResponse(Call<List<DataGet>> call, Response<List<DataGet>> response) {
                 dataGetList = response.body();
                 charts.add(lineChartGraph());
+                //charts.add(pieChartGraph());
             }
 
             @Override
