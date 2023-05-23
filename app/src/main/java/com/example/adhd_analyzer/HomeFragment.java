@@ -11,6 +11,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -78,7 +80,15 @@ public class HomeFragment extends Fragment {
         buttonStateViewModel.getButtonClickableState().observe(this.getActivity(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isClickable) {
+                Resources.Theme theme = getContext().getTheme();
                 tracking.setEnabled(isClickable);
+                if (isClickable){
+                    Drawable drawable = getResources().getDrawable(R.drawable.circular_button_background,theme);
+                    tracking.setBackground(drawable);
+                } else {
+                    Drawable drawable = getResources().getDrawable(R.drawable.circular_button_background_disable,theme);
+                    tracking.setBackground(drawable);
+                }
             }
         });
         initButton(tracking);
