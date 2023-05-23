@@ -20,6 +20,7 @@ import com.example.adhd_analyzer.entities.QAUobjects;
 import com.example.adhd_analyzer.logger_sensors.ProcessedDataDB;
 import com.example.adhd_analyzer.logger_sensors.processedDataDao;
 import com.example.adhd_analyzer.user.UserDetails;
+import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.LineData;
@@ -111,7 +112,6 @@ public class ReportsFragment extends Fragment {
 
     }
 
-    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -139,8 +139,19 @@ public class ReportsFragment extends Fragment {
                }
         });
 
+        //Chart chart = magic_function()
+
+
         return view;
     }
+
+
+    // line chart
+
+
+    // pie chart
+
+    // histogram
 
 
 
