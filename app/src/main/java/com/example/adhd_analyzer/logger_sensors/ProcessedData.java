@@ -50,12 +50,12 @@ public class ProcessedData {
         this.highAdhd = highAdhd;
     }
 
-    public static List<ProcessedData> convertToProcessData(PyObject object, long sessionId){
+    public static List<ProcessedData> convertToProcessData(PyObject object, int sessionId){
         List<PyObject> obs = object.get("values").asList();
         ArrayList<ProcessedData> processedDataArrayList =  new ArrayList<ProcessedData>();
         for (PyObject ob: obs) {
             List<PyObject> row = ob.asList();
-            ProcessedData data = new ProcessedData(row.get(0).toLong(), (int)sessionId, row.get(1).toBoolean(),row.get(2).toBoolean());
+            ProcessedData data = new ProcessedData(row.get(0).toLong(), sessionId, row.get(1).toBoolean(),row.get(2).toBoolean());
             processedDataArrayList.add(data);
         }
         return processedDataArrayList;

@@ -137,7 +137,7 @@ public class ReportsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_report_unit, container, false);
         getAnswers();
-        getDataBySession(123);
+        getLastData();
         downloadButton = view.findViewById(R.id.download_button);
         graphContainer = view.findViewById(R.id.graph_container);
 
@@ -293,10 +293,10 @@ public class ReportsFragment extends Fragment {
         });
     }
 
-    private void getDataBySession(int session){
+    private void getLastData(){
         WebServiceApi api = UserApi.getRetrofitInstance().create(WebServiceApi.class);
         String username = ModuleDB.getUserDetailsDB(getContext()).userDao().index().get(0).getUserName().toString();
-        Call<List<DataGet>> call = api.getDatas(username, session);
+        Call<List<DataGet>> call = api.getLastDatas(username);
         call.enqueue(new Callback<List<DataGet>>() {
             @Override
             public void onResponse(Call<List<DataGet>> call, Response<List<DataGet>> response) {

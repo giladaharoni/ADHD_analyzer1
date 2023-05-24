@@ -33,7 +33,8 @@ public interface WebServiceApi {
     @GET("ProcessData")
     Call<List<DataGet>> getDatas(@Query("username") String username, @Query("session") int session);
 
-
+    @GET("ProcessData/lastSession")
+    Call<List<DataGet>> getLastDatas(@Query("username") String username);
 
     @POST("ProcessData")
     Call<Void> uploadData(@Query("username") String username,@Body List<ProcessedData> dataList);

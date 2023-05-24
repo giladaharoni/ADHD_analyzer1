@@ -15,6 +15,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.icu.util.Calendar;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -131,6 +132,16 @@ public class SensorsRecordsService extends Service implements SensorEventListene
 
     }
 
+    private int makeSessionId(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startTime);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int hour = calendar.get(Calendar.HOUR);
+        int minutes = calendar.get(Calendar.MINUTE);
+        return minutes+hour*100+day*1000+month*100000;
+    }
+
 
     private void finishAndProcess(){
         Context context = getApplicationContext();
@@ -148,7 +159,7 @@ public class SensorsRecordsService extends Service implements SensorEventListene
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                List<ProcessedData> dataList = ProcessedData.convertToProcessData(pyObject,startTime.getTime());
+                List<ProcessedData> dataList = ProcessedData.convertToProcessData(pyObject,makeSessionId());
                 dataDao.insertList(dataList);
                 WebServiceApi api = UserApi.getRetrofitInstance().create(WebServiceApi.class);
                 api.uploadData(login.theUser.getUserName(),dataList).enqueue(new Callback<Void>() {
