@@ -172,8 +172,8 @@ public class ReportsFragment extends Fragment {
     private void addChartToLayout(Chart chart, FrameLayout chartContainer) {
 
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
         );
         chart.setLayoutParams(layoutParams);
 
@@ -229,12 +229,7 @@ public class ReportsFragment extends Fragment {
     }
 
 
-    // line chart
 
-
-    // pie chart
-
-    // histogram
 
     private List<Entry> AdhdPerHalfHours(){
         ArrayList<Entry> entries = new ArrayList<>();
@@ -272,7 +267,7 @@ public class ReportsFragment extends Fragment {
         chart.setData(lineData);
 
         // Customize the chart appearance and behavior
-        chart.getDescription().setText("Precent of ADHD diagnosis");
+        chart.getDescription().setText("Percent of ADHD diagnosis");
         chart.setExtraOffsets(10f, 10f, 10f, 10f);
         return chart;
     }
@@ -302,7 +297,7 @@ public class ReportsFragment extends Fragment {
             public void onResponse(Call<List<DataGet>> call, Response<List<DataGet>> response) {
                 dataGetList = response.body();
                 charts.add(lineChartGraph());
-                addChartToLayout(charts.get(0),graphContainer);
+                addChartToLayout(lineChartGraph(),graphContainer);
                 //charts.add(pieChartGraph());
             }
 
@@ -396,16 +391,16 @@ public class ReportsFragment extends Fragment {
             document.writeTo(fos);
             document.close();
             fos.close();
-            Uri pdfUri = FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file);
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(pdfUri, "application/pdf");
-            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-            try {
-                startActivity(Intent.createChooser(intent,"open pdf"));
-            } catch (ActivityNotFoundException  e) {
-                Toast.makeText(getContext(), "No PDF viewer app installed", Toast.LENGTH_SHORT).show();
-            }
+//            Uri pdfUri = FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file);
+//            Intent intent = new Intent(Intent.ACTION_SEND);
+//            intent.setDataAndType(pdfUri, "application/pdf");
+//            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//
+//            try {
+//                startActivity(Intent.createChooser(intent,"open pdf"));
+//            } catch (ActivityNotFoundException  e) {
+//                Toast.makeText(getContext(), "No PDF viewer app installed", Toast.LENGTH_SHORT).show();
+//            }
 
 
 

@@ -5,110 +5,116 @@
     android:layout_height="match_parent"
     tools:context=".QuizFragment"
     android:background="@color/background">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:fontFamily="@font/belleza"
-        android:text="Quiz"
-        android:textColor="@color/text2"
-        android:textSize="32dp" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Total Question"
-        android:textSize="20dp"
-        android:layout_marginTop="90dp"
-        android:textColor="@color/text2"
-        android:fontFamily="@font/belleza"
-        android:id="@+id/total"
-        android:layout_gravity="center_horizontal"/>
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="200dp">
-
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <!-- TODO: Update blank fragment layout -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:fontFamily="@font/belleza"
+            android:text="Quiz"
+            android:textColor="@color/text2"
+            android:textSize="32dp" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Question"
-            android:textSize="28dp"
+            android:text="Total Question"
+            android:textSize="20dp"
+            android:layout_marginTop="40dp"
             android:textColor="@color/text2"
             android:fontFamily="@font/belleza"
-            android:id="@+id/question"
-            android:layout_margin="20dp"
+            android:id="@+id/total"
             android:layout_gravity="center_horizontal"/>
 
-        <Button
-            android:id="@+id/Ans_never"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="#444444"
-            android:fontFamily="@font/belleza"
-            android:text="Never"
-            android:textColor="@color/text" />
+            android:orientation="vertical"
+            android:layout_marginTop="50dp">
 
-        <Button
-            android:id="@+id/Ans_rarely"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:text="Rarely"
-            android:background="#444444"
-            android:textColor="@color/text"
-            android:fontFamily="@font/belleza"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Question"
+                android:textSize="28dp"
+                android:textColor="@color/text2"
+                android:fontFamily="@font/belleza"
+                android:id="@+id/question"
+                android:layout_margin="20dp"
+                android:layout_gravity="center_horizontal"/>
 
-        <Button
-            android:id="@+id/Ans_often"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:text="Often"
-            android:background="#444444"
-            android:textColor="@color/text"
-            android:fontFamily="@font/belleza"/>
+            <Button
+                android:id="@+id/Ans_never"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="#444444"
+                android:fontFamily="@font/belleza"
+                android:text="Never"
+                android:textColor="@color/text" />
 
-        <Button
-            android:id="@+id/Ans_very_often"
+            <Button
+                android:id="@+id/Ans_rarely"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="Rarely"
+                android:background="#444444"
+                android:textColor="@color/text"
+                android:fontFamily="@font/belleza"/>
+
+            <Button
+                android:id="@+id/Ans_often"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="Often"
+                android:background="#444444"
+                android:textColor="@color/text"
+                android:fontFamily="@font/belleza"/>
+
+            <Button
+                android:id="@+id/Ans_very_often"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="Very often"
+                android:background="#444444"
+                android:textColor="@color/text"
+                android:fontFamily="@font/belleza"/>
+        </LinearLayout>
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:text="Very often"
-            android:background="#444444"
-            android:textColor="@color/text"
-            android:fontFamily="@font/belleza"/>
+            android:orientation="vertical"
+            android:layout_marginTop="20dp">
+
+            <Button
+                android:id="@+id/Submit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:fontFamily="@font/belleza"
+                android:text="submit"
+                android:background="@color/myButtonColor"
+                android:textColor="@color/text"
+                android:layout_gravity="center" />
+            <Button
+                android:id="@+id/Start_over"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:fontFamily="@font/belleza"
+                android:text="start over"
+                android:background="#B1A9A9"
+                android:textColor="@color/text2"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="600dp">
 
-        <Button
-            android:id="@+id/Submit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:fontFamily="@font/belleza"
-            android:text="submit"
-            android:background="@color/myButtonColor"
-            android:textColor="@color/text"
-            android:layout_gravity="center" />
-        <Button
-            android:id="@+id/Start_over"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:fontFamily="@font/belleza"
-            android:text="start over"
-            android:background="#B1A9A9"
-            android:textColor="@color/text2"
-            android:layout_gravity="center"/>
 
-    </LinearLayout>
 </FrameLayout>
