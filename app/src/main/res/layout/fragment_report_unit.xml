@@ -13,12 +13,13 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/report_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_margin="10dp"
             android:paddingTop="20dp"
-            android:text="Report from 12/34/5678"
+            android:text="@string/report_from_12_34_5678"
             android:textAlignment="center"
             android:textSize="32sp" />
 

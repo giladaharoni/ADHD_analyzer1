@@ -14,6 +14,7 @@ import com.anychart.enums.TooltipPositionMode;
 import com.anychart.graphics.vector.Stroke;
 import com.example.adhd_analyzer.api.UserApi;
 import com.example.adhd_analyzer.api.WebServiceApi;
+import com.example.adhd_analyzer.entities.Data;
 import com.example.adhd_analyzer.entities.DataGet;
 import com.example.adhd_analyzer.entities.QAUobjects;
 
@@ -40,6 +41,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import android.icu.util.Calendar;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -62,14 +64,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextClock;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -97,6 +101,7 @@ public class ReportsFragment extends Fragment {
     private FrameLayout graphContainer;
     private List<QAUobjects> answers;
     private List<DataGet> dataGetList;
+    private UserDetails details;
     List<Chart> charts = new ArrayList<>();
 
 
@@ -134,6 +139,7 @@ public class ReportsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        details = ModuleDB.getUserDetailsDB(getContext()).userDao().index().get(0);
 
         View view = inflater.inflate(R.layout.fragment_report_unit, container, false);
         getAnswers();
@@ -168,6 +174,18 @@ public class ReportsFragment extends Fragment {
         return view;
     }
 
+
+    private void setTitle(){
+        long timestamp = dataGetList.get(0).getTimestamp();
+        Date date = new Date(timestamp);
+        TextView reportTitle = getView().findViewById(R.id.report_title);
+        android.icu.util.Calendar calendar = android.icu.util.Calendar.getInstance();
+        calendar.setTime(date);
+        int month = calendar.get(android.icu.util.Calendar.MONTH);
+        int day = calendar.get(android.icu.util.Calendar.DAY_OF_MONTH);
+        String title = "Report from "+day+"/"+month;
+        reportTitle.setText(title);
+    }
 
     private void addChartToLayout(Chart chart, FrameLayout chartContainer) {
 
@@ -267,7 +285,7 @@ public class ReportsFragment extends Fragment {
         chart.setData(lineData);
 
         // Customize the chart appearance and behavior
-        chart.getDescription().setText("Percent of ADHD diagnosis");
+        chart.getDescription().setText("Percent of ADHD diagnosis of "+details.getFullName());
         chart.setExtraOffsets(10f, 10f, 10f, 10f);
         return chart;
     }
@@ -298,6 +316,7 @@ public class ReportsFragment extends Fragment {
                 dataGetList = response.body();
                 charts.add(lineChartGraph());
                 addChartToLayout(lineChartGraph(),graphContainer);
+                setTitle();
                 //charts.add(pieChartGraph());
             }
 
@@ -322,7 +341,7 @@ public class ReportsFragment extends Fragment {
 
         String text1;
         // Define the text to be written
-        StringBuilder text = new StringBuilder("The quiz answers:\n");
+        StringBuilder text = new StringBuilder("The quiz answers:");
         // Write the text on the PDF page's canvas
         canvas2.drawText(text.toString(), textX, textY, textPaint);
         for (int i = 0; i < answers.size(); i++) {
@@ -361,16 +380,18 @@ public class ReportsFragment extends Fragment {
             Canvas canvas = page.getCanvas();
             int chartWidth = canvas.getWidth() - (chart.getPaddingLeft() + chart.getPaddingRight());
             int chartHeight = canvas.getHeight() - (chart.getPaddingTop() + chart.getPaddingBottom());
-            Bitmap chartBitmap = Bitmap.createBitmap(chartWidth, chartHeight, Bitmap.Config.ARGB_8888);
-            Canvas chartCanvas = new Canvas(chartBitmap);
-            chart.draw(chartCanvas);
             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(chartWidth, chartHeight);
             chart.setLayoutParams(layoutParams);
-
-            // Measure and layout the chart view
             chart.measure(View.MeasureSpec.makeMeasureSpec(chartWidth, View.MeasureSpec.EXACTLY),
                     View.MeasureSpec.makeMeasureSpec(chartHeight, View.MeasureSpec.EXACTLY));
             chart.layout(0, 0, chart.getMeasuredWidth(), chart.getMeasuredHeight());
+            Bitmap chartBitmap = Bitmap.createBitmap(chartWidth, chartHeight, Bitmap.Config.ARGB_8888);
+            Canvas chartCanvas = new Canvas(chartBitmap);
+            chart.draw(chartCanvas);
+
+
+            // Measure and layout the chart view
+
 
             // Position the chart on the page
             int chartLeft = (canvas.getWidth() - chartBitmap.getWidth()) / 2;
@@ -385,7 +406,7 @@ public class ReportsFragment extends Fragment {
         AddQuestions(answers,secondPage);
         document.finishPage(secondPage);
         File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        File file = new File(directory, "example.pdf");
+        File file = new File(directory, "report.pdf");
         try {
             FileOutputStream fos = new FileOutputStream(file);
             document.writeTo(fos);
