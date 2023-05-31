@@ -57,10 +57,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SensorsRecordsService extends Service implements SensorEventListener, LocationListener {
-    private int PERMISSION_LOCATION_CODE = 1;
 
     private static final int NOTIFICATION_ID = 1;
-    private static final int DELAY_IN_MILLIS = 2 * 60 * 1000; // 23 minutes
+    private static final int DELAY_IN_MILLIS = 24 *60* 60 * 1000; // 23 minutes
     private Handler handler;
     private Runnable removeNotificationRunnable;
 
@@ -84,16 +83,10 @@ public class SensorsRecordsService extends Service implements SensorEventListene
         super.onStartCommand(intent, flags, startId);
         //startForeground();
         handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                finishAndProcess();
-                //should finish the service
-
-            }
-        }, DELAY_IN_MILLIS);
+        //should finish the service
+        handler.postDelayed(this::finishAndProcess, DELAY_IN_MILLIS);
         final String CHANNELID = "Foreground Service ID";
-        NotificationChannel channel = null;
+        NotificationChannel channel;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             channel = new NotificationChannel(
                     CHANNELID,
@@ -167,7 +160,7 @@ public class SensorsRecordsService extends Service implements SensorEventListene
                 WebServiceApi api = UserApi.getRetrofitInstance().create(WebServiceApi.class);
                 api.uploadData(login.theUser.getUserName(),dataList).enqueue(new Callback<Void>() {
                     @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
+                    public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                         int i = 1;
                         i++;
                         i++;
@@ -175,7 +168,7 @@ public class SensorsRecordsService extends Service implements SensorEventListene
                     }
 
                     @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
+                    public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                         int i = 1;
                         i++;
                         i++;
@@ -281,6 +274,8 @@ public class SensorsRecordsService extends Service implements SensorEventListene
     public void onSensorChanged(SensorEvent event) {
         Date now = new Date();
         if (now.getTime() - startTime.getTime() > 1000 * 60 * 60 * 24) {
+            finishAndProcess();
+            stopSelf();
             return;
         }
 

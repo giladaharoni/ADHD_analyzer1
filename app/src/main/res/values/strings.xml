@@ -13,4 +13,5 @@
     <string name="BaseUrl">https://10.0.2.2:7236/api/</string>
     <string name="download_file">Download File</string>
     <string name="report_from_12_34_5678">Report from 12/34/5678</string>
+    <string name="no_reports_yet">No reports yet..</string>
 </resources>
