@@ -314,6 +314,7 @@ public class ReportsFragment extends Fragment {
             @Override
             public void onResponse(Call<List<DataGet>> call, Response<List<DataGet>> response) {
                 dataGetList = response.body();
+                charts.clear();
                 charts.add(lineChartGraph());
                 addChartToLayout(lineChartGraph(),graphContainer);
                 setTitle();
