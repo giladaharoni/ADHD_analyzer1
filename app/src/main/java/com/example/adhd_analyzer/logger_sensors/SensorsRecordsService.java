@@ -147,6 +147,9 @@ public class SensorsRecordsService extends Service implements SensorEventListene
         Context context = getApplicationContext();
 
         List<SensorLog> logList = logDao.index();
+        if (logList == null || logList.isEmpty()) {
+            return;
+        }
         if (!Python.isStarted()) {
             Python.start(new AndroidPlatform(context));
         }
@@ -190,6 +193,9 @@ public class SensorsRecordsService extends Service implements SensorEventListene
     public void onCreate() {
         super.onCreate();
         startTime = new Date();
+        db = Room.databaseBuilder(getApplicationContext(), SensorsDB.class, "sensorsDB").allowMainThreadQueries().build();
+        logDao = db.sensorLogDao();
+        logDao.nukeTable();
         // Initialize sensor manager
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometerData = new float[3];
@@ -215,10 +221,6 @@ public class SensorsRecordsService extends Service implements SensorEventListene
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
         }
 
-
-        db = Room.databaseBuilder(getApplicationContext(), SensorsDB.class, "sensorsDB").allowMainThreadQueries().build();
-        logDao = db.sensorLogDao();
-        logDao.nukeTable();
 
 
     }

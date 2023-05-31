@@ -44,7 +44,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class HomeFragment extends Fragment {
 
 
-    private int LOCATION_CODE;
+    private final int LOCATION_CODE =1;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
@@ -140,10 +140,11 @@ public class HomeFragment extends Fragment {
             int code = 0;
             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),Manifest.permission.ACCESS_BACKGROUND_LOCATION)){
                 new AlertDialog.Builder(this.getContext()).setTitle("permission needed")
-                        .setMessage("we noeed sdfsdf").setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        .setMessage("please accept location access")
+                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION},code);
+                                ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION},LOCATION_CODE);
 
                             }
                         }).setNegativeButton("cancel", new DialogInterface.OnClickListener() {
@@ -154,7 +155,7 @@ public class HomeFragment extends Fragment {
                         }).create().show();
 
             } else {
-                ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION},code);
+                ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION},LOCATION_CODE);
 
             }
         }
