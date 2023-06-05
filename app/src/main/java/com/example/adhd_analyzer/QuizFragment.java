@@ -173,20 +173,6 @@ public class QuizFragment extends Fragment implements View.OnClickListener{
                 Toast.makeText(getActivity(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-//        File file = new File(context.getFilesDir(), "ADHD_Quiz.txt");
-//        try {
-//            FileOutputStream fos = new FileOutputStream(file);
-//            for(int i=0; i<totalQuestions; i++){
-//                String line = QuestionAnswer.question[i] + "- ";
-//                fos.write(line.getBytes());
-//                String line2 = QuestionAnswer.answers[i] + "\n";
-//                fos.write(line2.getBytes());
-//            }
-//            files[0] = file.getCanonicalPath().toString();
-//            fos.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
 
 
         currentQuestionIndex=0;
@@ -195,10 +181,11 @@ public class QuizFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
-        ansA.setBackgroundColor(Color.DKGRAY);
-        ansB.setBackgroundColor(Color.DKGRAY);
-        ansC.setBackgroundColor(Color.DKGRAY);
-        ansD.setBackgroundColor(Color.DKGRAY);
+
+        ansA.setBackgroundColor(getResources().getColor(R.color.myButtonColor));
+        ansB.setBackgroundColor(getResources().getColor(R.color.myButtonColor));
+        ansC.setBackgroundColor(getResources().getColor(R.color.myButtonColor));
+        ansD.setBackgroundColor(getResources().getColor(R.color.myButtonColor));
 
         Button clickedButton = (Button) view;
         if(clickedButton.getId() == R.id.Start_over){
@@ -217,7 +204,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener{
         } else{
             //choise button clicked
             selectedAnswer = clickedButton.getText().toString();
-            clickedButton.setBackgroundColor(Color.BLACK);
+            clickedButton.setBackgroundColor(getResources().getColor(R.color.button2));
         }
     }
 }
