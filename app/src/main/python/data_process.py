@@ -8,8 +8,8 @@ def compress(before_comp):
     da['timestamp'] = pd.to_datetime(da['timestamp'], unit='ms')
     da.set_index('timestamp', inplace=True)
     da_resampled = da.resample('1min').agg({'stay_inplace': 'sum', 'high_adhd': 'sum'})
-    da_resampled['high_adhd'] = da_resampled['high_adhd'] > da_resampled['high_adhd'].sum() / 2
     da_resampled['stay_inplace'] = da_resampled['stay_inplace'] > da_resampled['stay_inplace'].sum() / 2
+    da_resampled['high_adhd'] = (da_resampled['high_adhd'] > da_resampled['high_adhd'].sum() / 2) & da_resampled['stay_inplace']
     da_resampled.reset_index(inplace=True)
     da_resampled['timestamp'] = (da_resampled['timestamp'] - np.datetime64('1970-01-01T00:00:00Z')) / np.timedelta64(1, 'ms')
     da_resampled['timestamp'] = da_resampled['timestamp'].astype('int64')
