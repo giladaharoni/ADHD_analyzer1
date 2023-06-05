@@ -7,7 +7,7 @@ def compress(before_comp):
     da = before_comp.copy()
     da['timestamp'] = pd.to_datetime(da['timestamp'], unit='ms')
     da.set_index('timestamp', inplace=True)
-    da_resampled = da.resample('5min').agg({'stay_inplace': 'sum', 'high_adhd': 'sum'})
+    da_resampled = da.resample('1min').agg({'stay_inplace': 'sum', 'high_adhd': 'sum'})
     da_resampled['high_adhd'] = da_resampled['high_adhd'] > da_resampled['high_adhd'].sum() / 2
     da_resampled['stay_inplace'] = da_resampled['stay_inplace'] > da_resampled['stay_inplace'].sum() / 2
     da_resampled.reset_index(inplace=True)
