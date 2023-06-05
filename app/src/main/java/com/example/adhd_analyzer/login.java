@@ -59,11 +59,6 @@ public class login extends AppCompatActivity {
                             String fullName = user.getFullName();
                             ModuleDB.getUserDetailsDB(view.getContext()).userDao().insert(new UserDetails(fullName,username,password));
 
-                            theUser.setFullName(fullName);
-                            theUser.setUserName(username);
-                            theUser.setPassword(password);
-
-
                             if(response.code() == 400){
                                 Toast.makeText(login.this, "wrong username or password", Toast.LENGTH_SHORT).show();
                             } else {

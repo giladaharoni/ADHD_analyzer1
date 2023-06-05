@@ -58,6 +58,7 @@ import retrofit2.Response;
 
 public class SensorsRecordsService extends Service implements SensorEventListener, LocationListener {
 
+    private long lastTimeStamp = 0;
     private static final int NOTIFICATION_ID = 1;
     private static final int DELAY_IN_MILLIS = 24 *60* 60 * 1000; // 23 minutes
     private Handler handler;
@@ -293,7 +294,7 @@ public class SensorsRecordsService extends Service implements SensorEventListene
             return;
         }
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if (location != null) {
+        if ((location != null) && (lastTimeStamp < System.currentTimeMillis())) {
             long timestamp = System.currentTimeMillis();
             float accelerometerX = accelerometerData[0];
             float accelerometerY = accelerometerData[1];
@@ -307,6 +308,7 @@ public class SensorsRecordsService extends Service implements SensorEventListene
             double latitude = location.getLatitude();
             double longitude = location.getLongitude();
             double altitude = location.getAltitude();
+            lastTimeStamp = timestamp;
             SensorLog log = new SensorLog(timestamp, accelerometerX, accelerometerY, accelerometerZ, gyroscopeX, gyroscopeY, gyroscopeZ, magnetometerX, magnetometerY, magnetometerZ, latitude, longitude, altitude);
             logDao.insert(log);
         }
@@ -322,4 +324,5 @@ public class SensorsRecordsService extends Service implements SensorEventListene
     public void onLocationChanged(@NonNull Location location) {
 
     }
+
 }

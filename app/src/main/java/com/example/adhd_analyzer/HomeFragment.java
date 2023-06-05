@@ -31,6 +31,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.adhd_analyzer.logger_sensors.ModuleDB;
 import com.example.adhd_analyzer.logger_sensors.SensorsRecordsService;
 import com.example.adhd_analyzer.viewmodels.ButtonStateViewModel;
 
@@ -95,7 +96,7 @@ public class HomeFragment extends Fragment {
 
         TextView hello = view.findViewById(R.id.hello_user);
         //SharedPreferences prefs = getActivity().getSharedPreferences("myPrefs", MODE_PRIVATE);
-        String fullname = login.theUser.getFullName();
+        String fullname = ModuleDB.getUserDetailsDB(getContext()).userDao().index().get(0).getFullName();
         String s_hello = "hello " + fullname +"!";
         hello.setText(s_hello);
 
