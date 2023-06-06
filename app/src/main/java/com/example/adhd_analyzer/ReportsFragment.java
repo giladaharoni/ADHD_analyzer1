@@ -217,9 +217,6 @@ public class ReportsFragment extends Fragment {
         return chart;
     }
 
-
-
-
     private List<Entry> AdhdPerHalfHours(){
         ArrayList<Entry> entries = new ArrayList<>();
         float counter;
@@ -360,10 +357,6 @@ public class ReportsFragment extends Fragment {
             Bitmap chartBitmap = Bitmap.createBitmap(chartWidth, chartHeight, Bitmap.Config.ARGB_8888);
             Canvas chartCanvas = new Canvas(chartBitmap);
             chart.draw(chartCanvas);
-
-
-            // Measure and layout the chart view
-
 
             // Position the chart on the page
             int chartLeft = (canvas.getWidth() - chartBitmap.getWidth()) / 2;
