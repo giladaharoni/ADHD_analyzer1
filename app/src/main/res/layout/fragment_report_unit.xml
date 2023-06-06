@@ -20,7 +20,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_margin="10dp"
             android:paddingTop="20dp"
-            android:text="@string/report_from_12_34_5678"
+            android:text="loading...."
             android:textAlignment="center"
             android:textSize="32sp" />
 
