@@ -49,6 +49,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -57,8 +58,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SensorsRecordsService extends Service implements SensorEventListener, LocationListener {
+    private static final int PROCESS_TIME_CHUNK = 3;
+    private int sessionId;
 
     private long lastTimeStamp = 0;
+    private long latProcessTimestamp = 0;
     private static final int NOTIFICATION_ID = 1;
     private static final int DELAY_IN_MILLIS = 24 *60* 60 * 1000; // 23 minutes
     private Handler handler;
@@ -129,17 +133,51 @@ public class SensorsRecordsService extends Service implements SensorEventListene
     private int makeSessionId(){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(startTime);
+        int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH)+1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int hour = calendar.get(Calendar.HOUR);
-        return hour+day*100+month*10000+23*1000000;
+        return hour+day*100+month*10000+year*1000000;
+    }
+
+    /**
+     * when the tracking is over. we took the process data and uploading it to the web.
+     */
+    private void finishAndProcess(){
+        process(latProcessTimestamp);
+        List<ProcessedData> dataList = ModuleDB.getProcessedDB(getApplicationContext()).processedDataDao().index();
+        String username = ModuleDB.getUserDetailsDB(getApplicationContext()).userDao().index().get(0).getUserName();
+        WebServiceApi api = UserApi.getRetrofitInstance().create(WebServiceApi.class);
+        api.uploadData(username,dataList).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                api.uploadData(username,dataList).enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                        Toast.makeText(getApplicationContext(), "cannot upload your data", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
     }
 
 
-    private void finishAndProcess(){
+    /**
+     * process the data chunk by python, insert it to the DB.
+     */
+    private void process(long timestampThreshold){
         Context context = getApplicationContext();
-
-        List<SensorLog> logList = logDao.index();
+        List<SensorLog> logList = logDao.getFromTime(timestampThreshold);
         if (logList == null || logList.isEmpty()) {
             return;
         }
@@ -150,35 +188,20 @@ public class SensorsRecordsService extends Service implements SensorEventListene
         Gson gson = new Gson();
         String jsons = gson.toJson(logList);
         PyObject pyObject = py.getModule("data_process").callAttr("process", jsons);
-        ProcessedDataDB dataDB = ModuleDB.getProcessedDB(context);
-        processedDataDao dataDao = dataDB.processedDataDao();
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                List<ProcessedData> dataList = ProcessedData.convertToProcessData(pyObject,makeSessionId());
-                dataDao.insertList(dataList);
-                WebServiceApi api = UserApi.getRetrofitInstance().create(WebServiceApi.class);
-                api.uploadData(login.theUser.getUserName(),dataList).enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                        int i = 1;
-                        i++;
-                        i++;
-
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                        int i = 1;
-                        i++;
-                        i++;
-                    }
-                });
-
-
-
+        processedDataDao dataDao = ModuleDB.getProcessedDB(context).processedDataDao();
+        List<ProcessedData> dataList = ProcessedData.convertToProcessData(pyObject,sessionId);
+        try {
+            ModuleDB.getProcessedDB(context).processedDataDao().insertList(dataList);
+        } catch (android.database.sqlite.SQLiteConstraintException exception){
+            ProcessedData firstElement = dataList.stream().min(Comparator.comparingLong(ProcessedData::getTimestamp)).orElse(null);
+            if (firstElement != null) {
+                ModuleDB.getProcessedDB(context).processedDataDao().update(firstElement);
+                dataList.remove(firstElement);
+                ModuleDB.getProcessedDB(context).processedDataDao().insertList(dataList);
             }
-        });
+        }
+
+
     }
 
 
@@ -186,7 +209,8 @@ public class SensorsRecordsService extends Service implements SensorEventListene
     public void onCreate() {
         super.onCreate();
         startTime = new Date();
-        db = Room.databaseBuilder(getApplicationContext(), SensorsDB.class, "sensorsDB").allowMainThreadQueries().build();
+        sessionId = makeSessionId();
+        db = Room.databaseBuilder(getApplicationContext(), SensorsDB.class, "sensorsDB").allowMainThreadQueries().fallbackToDestructiveMigration().build();
         logDao = db.sensorLogDao();
         Thread thread = new Thread(){
             @Override
@@ -265,8 +289,16 @@ public class SensorsRecordsService extends Service implements SensorEventListene
     }
 
     public void onDestroy() {
-        super.onDestroy();
-        finishAndProcess();
+        Thread thread = new Thread(() -> finishAndProcess());
+        thread.start();
+        while (thread.isAlive()){
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ignored) {
+
+            }
+        }
+
         if (handler != null && removeNotificationRunnable != null) {
             handler.removeCallbacks(removeNotificationRunnable);
         }
@@ -275,7 +307,7 @@ public class SensorsRecordsService extends Service implements SensorEventListene
         sensorManager.unregisterListener(this);
         locationManager.removeUpdates(this);
         Toast.makeText(this, "finish", Toast.LENGTH_SHORT).show();
-
+        super.onDestroy();
 
     }
 
@@ -287,6 +319,11 @@ public class SensorsRecordsService extends Service implements SensorEventListene
             finishAndProcess();
             stopSelf();
             return;
+        }
+        if (now.getTime() - latProcessTimestamp > 1000*60*PROCESS_TIME_CHUNK){
+            long threshold = latProcessTimestamp;
+            latProcessTimestamp = System.currentTimeMillis();
+            new Thread(() -> process(threshold)).start();
         }
 
         // Record sensor data

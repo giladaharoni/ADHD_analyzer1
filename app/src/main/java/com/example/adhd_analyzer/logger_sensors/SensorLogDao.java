@@ -16,6 +16,9 @@ public interface SensorLogDao {
     @Query("SELECT * FROM sensorlog WHERE timestamp = :timestamp")
     SensorLog get(long timestamp);
 
+    @Query("SELECT * FROM SensorLog WHERE timestamp > :threshold")
+    List<SensorLog> getFromTime(long threshold);
+
     @Insert
     void insert(SensorLog... sensorLogs);
     @Update

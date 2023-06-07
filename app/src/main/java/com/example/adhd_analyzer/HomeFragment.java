@@ -81,14 +81,17 @@ public class HomeFragment extends Fragment {
         buttonStateViewModel.getButtonClickableState().observe(this.getActivity(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isClickable) {
-                Resources.Theme theme = getContext().getTheme();
-                tracking.setEnabled(isClickable);
-                if (isClickable){
-                    Drawable drawable = getResources().getDrawable(R.drawable.circular_button_background,theme);
-                    tracking.setBackground(drawable);
-                } else {
-                    Drawable drawable = getResources().getDrawable(R.drawable.circular_button_background_disable,theme);
-                    tracking.setBackground(drawable);
+                Context context = getContext();
+                if (context != null) {
+                    Resources.Theme theme = context.getTheme();
+                    tracking.setEnabled(isClickable);
+                    if (isClickable){
+                        Drawable drawable = getResources().getDrawable(R.drawable.circular_button_background,theme);
+                        tracking.setBackground(drawable);
+                    } else {
+                        Drawable drawable = getResources().getDrawable(R.drawable.circular_button_background_disable,theme);
+                        tracking.setBackground(drawable);
+                    }
                 }
             }
         });
