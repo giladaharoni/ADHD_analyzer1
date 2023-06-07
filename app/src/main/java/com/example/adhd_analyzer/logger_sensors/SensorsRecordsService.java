@@ -188,7 +188,17 @@ public class SensorsRecordsService extends Service implements SensorEventListene
         startTime = new Date();
         db = Room.databaseBuilder(getApplicationContext(), SensorsDB.class, "sensorsDB").allowMainThreadQueries().build();
         logDao = db.sensorLogDao();
-        logDao.nukeTable();
+        Thread thread = new Thread(){
+            @Override
+            public void run() {
+                logDao.nukeTable();
+
+                ModuleDB.getProcessedDB(getApplicationContext()).processedDataDao().nukeTable();
+            }
+        };
+        thread.start();
+
+
         // Initialize sensor manager
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometerData = new float[3];

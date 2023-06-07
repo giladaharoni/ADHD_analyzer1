@@ -7,9 +7,10 @@ def compress(before_comp):
     da = before_comp.copy()
     da['timestamp'] = pd.to_datetime(da['timestamp'], unit='ms')
     da.set_index('timestamp', inplace=True)
-    da_resampled = da.resample('1min').agg({'stay_inplace': 'sum', 'high_adhd': 'sum'})
-    da_resampled['high_adhd'] = da_resampled['high_adhd'] > da_resampled['high_adhd'].sum() / 2
-    da_resampled['stay_inplace'] = da_resampled['stay_inplace'] > da_resampled['stay_inplace'].sum() / 2
+    da['count'] = 1
+    da_resampled = da.resample('1min').agg({'stay_inplace': 'sum', 'high_adhd': 'sum', 'count': 'sum'})
+    da_resampled['stay_inplace'] = da_resampled['stay_inplace'] / da_resampled['count'] >  0.5
+    da_resampled['high_adhd'] = (da_resampled['high_adhd'] / da_resampled['count'] >  0.5) & da_resampled['stay_inplace']
     da_resampled.reset_index(inplace=True)
     da_resampled['timestamp'] = (da_resampled['timestamp'] - np.datetime64('1970-01-01T00:00:00Z')) / np.timedelta64(1, 'ms')
     da_resampled['timestamp'] = da_resampled['timestamp'].astype('int64')
@@ -25,7 +26,7 @@ def process(data):
                                        'gyroscopeX', 'gyroscopeY', 'gyroscopeZ',
                                        'magnetometerX', 'magnetometerY', 'magnetometerZ']], axis=1)
     df_gps_norm = np.linalg.norm(df_diff[['latitude', 'longitude']], axis=1)
-    major_threshold = 7.0
+    major_threshold = 1.2
     minor_threshold = 3.1
     stay_inplace = (df_gps_norm <= minor_threshold)
     high_adhd = (df_diff_norm > major_threshold) & stay_inplace
