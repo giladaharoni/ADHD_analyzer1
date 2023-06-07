@@ -152,7 +152,7 @@ public class ReportsFragment extends Fragment {
         TextView reportTitle = getView().findViewById(R.id.report_title);
         android.icu.util.Calendar calendar = android.icu.util.Calendar.getInstance();
         calendar.setTime(date);
-        int month = calendar.get(android.icu.util.Calendar.MONTH);
+        int month = calendar.get(android.icu.util.Calendar.MONTH)+1;
         int day = calendar.get(android.icu.util.Calendar.DAY_OF_MONTH);
         String title = "Report from "+day+"/"+month;
         reportTitle.setText(title);

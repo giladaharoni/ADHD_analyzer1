@@ -132,7 +132,7 @@ public class SensorsRecordsService extends Service implements SensorEventListene
         int month = calendar.get(Calendar.MONTH)+1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int hour = calendar.get(Calendar.HOUR);
-        return hour+day*100+month*1000+23*100000;
+        return hour+day*100+month*10000+23*1000000;
     }
 
 
