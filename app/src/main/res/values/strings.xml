@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ADHD_analyzer</string>
+    <string name="app_name">ADHD Analyzer</string>
     <string name="wellcome_to_adhd_analyzer_application">wellcome to ADHD analyzer application!</string>
     <string name="login">LOGIN</string>
     <string name="register">REGISTER</string>
