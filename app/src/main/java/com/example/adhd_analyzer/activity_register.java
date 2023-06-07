@@ -6,6 +6,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,6 +18,8 @@ import android.widget.Toast;
 import com.example.adhd_analyzer.api.UserApi;
 import com.example.adhd_analyzer.api.WebServiceApi;
 import com.example.adhd_analyzer.entities.User;
+import com.example.adhd_analyzer.logger_sensors.ModuleDB;
+import com.example.adhd_analyzer.user.UserDetails;
 
 public class activity_register extends AppCompatActivity {
     private EditText etUsername, etFullName, etPassword, etPasswordVerify;
@@ -61,22 +64,11 @@ public class activity_register extends AppCompatActivity {
                             // User registered successfully
                             User user = response.body();
                             Intent intent = new Intent(activity_register.this, home.class);
-                            //intent.putExtra("username", username);
-                            //intent.putExtra("fullname", fullName);
-                            //intent.putExtra("password", password);
 
                             String fullName = user.getFullName();
 
-//                            SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
-//                            SharedPreferences.Editor editor = prefs.edit();
-//                            editor.putString("username", username);
-//                            editor.putString("password", password);
-//                            editor.putString("fullName", fullName);
-//                            editor.apply();
 
-                            login.theUser.setFullName(fullName);
-                            login.theUser.setUserName(username);
-                            login.theUser.setPassword(password);
+                            ModuleDB.getUserDetailsDB(getBaseContext()).userDao().insert(new UserDetails(fullName,username,password));
 
                             if(response.code() == 400){
                                 Toast.makeText(activity_register.this, "This username is already use", Toast.LENGTH_SHORT).show();
