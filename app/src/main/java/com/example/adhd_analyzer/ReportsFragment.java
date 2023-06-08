@@ -15,16 +15,23 @@ import com.github.mikephil.charting.data.Entry;
 
 import android.Manifest;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.graphics.pdf.PdfDocument;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -43,8 +50,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -337,9 +346,36 @@ public class ReportsFragment extends Fragment {
 
     }
 
+    private ActivityResultLauncher<String> createDocumentLauncher;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        createDocumentLauncher = registerForActivityResult(new ActivityResultContracts.CreateDocument(), new ActivityResultCallback<Uri>() {
+            @Override
+            public void onActivityResult(Uri result) {
+                if (result != null) {
+                    try {
+                        OutputStream outputStream = getActivity().getContentResolver().openOutputStream(result);
+                        if (outputStream != null) {
+                            document.writeTo(outputStream);
+                            outputStream.close();
+                        }
+                    } catch (FileNotFoundException e) {
+                        throw new RuntimeException(e);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
+
+    }
+    private PdfDocument document;
+
     private void DownloadPDF(List<Chart> charts, List<QAUobjects> answers){
         int pages = charts.size()+1;
-        PdfDocument document = new PdfDocument();
+        document = new PdfDocument();
         int pageNumber = 1;
 
         for (Chart chart: charts) {
@@ -370,33 +406,36 @@ public class ReportsFragment extends Fragment {
         PdfDocument.Page secondPage = document.startPage(secondPageInfo);
         AddQuestions(answers,secondPage);
         document.finishPage(secondPage);
-        File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        File file = new File(directory, "report.pdf");
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            document.writeTo(fos);
-            document.close();
-            fos.close();
-//            Uri pdfUri = FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file);
-//            Intent intent = new Intent(Intent.ACTION_SEND);
-//            intent.setDataAndType(pdfUri, "application/pdf");
-//            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+//        File file = new File(directory, "report.pdf");
+        createDocumentLauncher.launch("report.pdf");
+
 //
-//            try {
-//                startActivity(Intent.createChooser(intent,"open pdf"));
-//            } catch (ActivityNotFoundException  e) {
-//                Toast.makeText(getContext(), "No PDF viewer app installed", Toast.LENGTH_SHORT).show();
-//            }
-
-
-
-            // Show a toast message to indicate that the PDF file was created and downloaded successfully
-            Toast.makeText(getContext(), "PDF file created and downloaded", Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Show a toast message if an error occurs while creating or downloading the PDF file
-            Toast.makeText(getContext(), "Error in saving the file file", Toast.LENGTH_SHORT).show();
-        }
+//        try {
+////            FileOutputStream fos = new FileOutputStream(file);
+////            document.writeTo(fos);
+////            document.close();
+////            fos.close();
+////            Uri pdfUri = FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file);
+////            Intent intent = new Intent(Intent.ACTION_SEND);
+////            intent.setDataAndType(pdfUri, "application/pdf");
+////            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+////
+////            try {
+////                startActivity(Intent.createChooser(intent,"open pdf"));
+////            } catch (ActivityNotFoundException  e) {
+////                Toast.makeText(getContext(), "No PDF viewer app installed", Toast.LENGTH_SHORT).show();
+////            }
+//
+//
+//
+//            // Show a toast message to indicate that the PDF file was created and downloaded successfully
+//            Toast.makeText(getContext(), "PDF file created and downloaded", Toast.LENGTH_SHORT).show();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            // Show a toast message if an error occurs while creating or downloading the PDF file
+//            Toast.makeText(getContext(), "Error in saving the file", Toast.LENGTH_SHORT).show();
+//        }
     }
 
 
