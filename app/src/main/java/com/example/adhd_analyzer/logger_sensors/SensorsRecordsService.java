@@ -131,6 +131,7 @@ public class SensorsRecordsService extends Service implements SensorEventListene
     }
 
     private int makeSessionId(){
+        //hope you get it
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(startTime);
         int year = calendar.get(Calendar.YEAR);
