@@ -1,55 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".QuizFragment"
     android:background="@color/background">
-    <LinearLayout
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:fontFamily="@font/belleza"
+        android:text="Quiz"
+        android:textColor="@color/text2"
+        android:textSize="32dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total Question"
+        android:textSize="20dp"
+        android:layout_marginTop="40dp"
+        android:textColor="@color/text2"
+        android:fontFamily="@font/belleza"
+        android:id="@+id/total"
+        android:layout_centerHorizontal="true"/>
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-        <!-- TODO: Update blank fragment layout -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:fontFamily="@font/belleza"
-            android:text="Quiz"
-            android:textColor="@color/text2"
-            android:textSize="32dp" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Total Question"
-            android:textSize="20dp"
-            android:layout_marginTop="40dp"
-            android:textColor="@color/text2"
-            android:fontFamily="@font/belleza"
-            android:id="@+id/total"
-            android:layout_gravity="center_horizontal"/>
+        android:layout_above="@+id/buttonLayout"
+        android:layout_below="@id/total">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_marginTop="50dp">
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:text="Question"
                 android:textSize="28dp"
                 android:textColor="@color/text2"
                 android:fontFamily="@font/belleza"
                 android:id="@+id/question"
                 android:layout_margin="20dp"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_centerHorizontal="true"/>
 
             <Button
                 android:id="@+id/Ans_never"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/question"
                 android:layout_margin="5dp"
                 android:background="@color/myButtonColor"
                 android:fontFamily="@font/belleza"
@@ -60,6 +63,7 @@
                 android:id="@+id/Ans_rarely"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/Ans_never"
                 android:layout_margin="5dp"
                 android:text="Rarely"
                 android:background="@color/myButtonColor"
@@ -70,6 +74,7 @@
                 android:id="@+id/Ans_often"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/Ans_rarely"
                 android:layout_margin="5dp"
                 android:text="Often"
                 android:background="@color/myButtonColor"
@@ -80,41 +85,46 @@
                 android:id="@+id/Ans_very_often"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/Ans_often"
                 android:layout_margin="5dp"
                 android:text="Very often"
                 android:background="@color/myButtonColor"
                 android:textColor="@color/text"
                 android:fontFamily="@font/belleza"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
+        </RelativeLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="28dp"
+        android:layout_marginTop="29dp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/Submit"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="29dp">
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:background="@color/myButtonColor"
+            android:fontFamily="@font/belleza"
+            android:text="Submit"
+            android:textColor="@color/text" />
 
-            <Button
-                android:id="@+id/Submit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:fontFamily="@font/belleza"
-                android:text="submit"
-                android:background="@color/myButtonColor"
-                android:textColor="@color/text"
-                android:layout_gravity="center" />
-            <Button
-                android:id="@+id/Start_over"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:fontFamily="@font/belleza"
-                android:text="start over"
-                android:background="#B1A9A9"
-                android:textColor="@color/text2"
-                android:layout_gravity="center"/>
+        <Button
+            android:id="@+id/Start_over"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:background="#B1A9A9"
+            android:fontFamily="@font/belleza"
+            android:text="Start Over"
+            android:textColor="@color/text2" />
 
-        </LinearLayout>
     </LinearLayout>
 
-
-</FrameLayout>
+</RelativeLayout>
