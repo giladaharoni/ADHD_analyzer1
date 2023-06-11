@@ -49,6 +49,7 @@
             android:layout_height="wrap_content"
             android:hint="Password"
             android:fontFamily="@font/belleza"
+            android:inputType="textPassword"
             android:textSize="32dp" />
         <EditText
             android:id="@+id/password_edit_text_verify_password"
