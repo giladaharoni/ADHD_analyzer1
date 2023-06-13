@@ -305,7 +305,28 @@ public class ReportsFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<DataGet>> call, Throwable t) {
-                dataGetList = new ArrayList<>();
+                Call<List<DataGet>> call1 = api.getLastDatas(username);
+                call1.enqueue(new Callback<List<DataGet>>() {
+                    @Override
+                    public void onResponse(Call<List<DataGet>> call, Response<List<DataGet>> response) {
+                        dataGetList = response.body();
+                        if(dataGetList == null){
+                            TextView reportTitle = getView().findViewById(R.id.report_title);
+                            reportTitle.setText("No Tracking done yet");
+                            return;
+                        }
+                        charts.clear();
+                        charts.add(lineChartGraph());
+                        addChartToLayout(lineChartGraph(),graphContainer);
+                        setTitle();
+                        //charts.add(pieChartGraph());
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<DataGet>> call, Throwable t) {
+                        dataGetList = new ArrayList<>();
+                    }
+                });
             }
         });
     }
