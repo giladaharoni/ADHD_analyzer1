@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.adhd_analyzer.logger_sensors.ModuleDB;
 import com.example.adhd_analyzer.logger_sensors.SensorsRecordsService;
@@ -119,6 +120,9 @@ public class HomeFragment extends Fragment {
 
                 } else{
                     checkRequest();
+                    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         getActivity().startForegroundService(new Intent(view.getContext(), SensorsRecordsService.class));
                     }
