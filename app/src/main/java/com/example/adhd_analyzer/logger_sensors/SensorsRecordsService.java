@@ -57,6 +57,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * the main tracking and processing background service takes place here.
+ * @author gilad
+ */
 public class SensorsRecordsService extends Service implements SensorEventListener, LocationListener {
     private static final int PROCESS_TIME_CHUNK = 3;
     private int sessionId;
@@ -83,6 +87,18 @@ public class SensorsRecordsService extends Service implements SensorEventListene
     public SensorsRecordsService() {
     }
 
+    /**
+     * When starting the service, a permanent notification should start.
+     * @param intent The Intent supplied to {@link android.content.Context#startService},
+     * as given.  This may be null if the service is being restarted after
+     * its process has gone away, and it had previously returned anything
+     * except {@link #START_STICKY_COMPATIBILITY}.
+     * @param flags Additional data about this start request.
+     * @param startId A unique integer representing this specific request to
+     * start.  Use with {@link #stopSelfResult(int)}.
+     *
+     * @return
+     */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
@@ -130,6 +146,10 @@ public class SensorsRecordsService extends Service implements SensorEventListene
 
     }
 
+    /**
+     * generate the tracking session ID, instead of long timestamp.
+     * @return session id for the current tracking.
+     */
     private int makeSessionId(){
         //hope you get it
         Calendar calendar = Calendar.getInstance();
@@ -142,7 +162,7 @@ public class SensorsRecordsService extends Service implements SensorEventListene
     }
 
     /**
-     * when the tracking is over. we took the process data and uploading it to the web.
+     * when the tracking is over. we took the remained process data and uploading it to the web.
      */
     private void finishAndProcess(){
         process(latProcessTimestamp);
@@ -175,6 +195,7 @@ public class SensorsRecordsService extends Service implements SensorEventListene
 
     /**
      * process the data chunk by python, insert it to the DB.
+     * @param timestampThreshold sensors logs from this timestamp would be fetched and processed.
      */
     private void process(long timestampThreshold){
         Context context = getApplicationContext();
@@ -206,6 +227,10 @@ public class SensorsRecordsService extends Service implements SensorEventListene
     }
 
 
+    /**
+     * Init some of the properties. reset the DBs of the process Data and sensors logs. create
+     * listeners for the sensors (if permitted).
+     */
     @Override
     public void onCreate() {
         super.onCreate();
@@ -262,6 +287,10 @@ public class SensorsRecordsService extends Service implements SensorEventListene
     }
 
 
+    /**
+     * create permanent notification (necessary for background process in android)
+     * @return the permanent notification.
+     */
     private Notification createNotification() {
         // Customize the notification according to your needs
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
@@ -275,6 +304,9 @@ public class SensorsRecordsService extends Service implements SensorEventListene
         return builder.build();
     }
 
+    /**
+     * when the tracking is end, we can remove the notification.
+     */
     private void removeNotification() {
         // Cancel the existing notification
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
@@ -288,6 +320,9 @@ public class SensorsRecordsService extends Service implements SensorEventListene
         handler.postDelayed(removeNotificationRunnable, DELAY_IN_MILLIS);
     }
 
+    /**
+     * process the remain data, close the sensors listeners and print to the user about that.
+     */
     public void onDestroy() {
         Thread thread = new Thread(() -> finishAndProcess());
         thread.start();
@@ -312,6 +347,10 @@ public class SensorsRecordsService extends Service implements SensorEventListene
     }
 
 
+    /**
+     * listeners of the sensors update the sensor log table. in addition it process the bunch of data.
+     * @param event the {@link android.hardware.SensorEvent SensorEvent}.
+     */
     @Override
     public void onSensorChanged(SensorEvent event) {
         Date now = new Date();

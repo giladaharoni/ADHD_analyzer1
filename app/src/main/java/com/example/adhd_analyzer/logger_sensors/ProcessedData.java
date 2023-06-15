@@ -50,6 +50,12 @@ public class ProcessedData {
         this.highAdhd = highAdhd;
     }
 
+    /**
+     * convert the pyobject to the java pojo.
+     * @param object pyObject form of the data.
+     * @param sessionId add the session ID to each row.
+     * @return list of the ProcessedData format.
+     */
     public static List<ProcessedData> convertToProcessData(PyObject object, int sessionId){
         List<PyObject> obs = object.get("values").asList();
         ArrayList<ProcessedData> processedDataArrayList =  new ArrayList<ProcessedData>();
