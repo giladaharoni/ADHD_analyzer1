@@ -116,6 +116,18 @@ public class ReportsFragment extends Fragment {
 
     }
 
+    /**
+     * when the fragment is shown, it downloads the ansers and process data for running the view.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -155,6 +167,9 @@ public class ReportsFragment extends Fragment {
     }
 
 
+    /**
+     * get the session ID of the tracking, parsing it to title and set the title view.
+     */
     private void setTitle(){
         long timestamp = dataGetList.get(0).getTimestamp();
         Date date = new Date(timestamp);
@@ -167,6 +182,11 @@ public class ReportsFragment extends Fragment {
         reportTitle.setText(title);
     }
 
+    /**
+     * set the chart to view in a selected container.
+     * @param chart the chart object.
+     * @param chartContainer linear layout container.
+     */
     private void addChartToLayout(Chart chart, FrameLayout chartContainer) {
 
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
@@ -178,6 +198,10 @@ public class ReportsFragment extends Fragment {
         chartContainer.addView(chart);
     }
 
+    /**
+     * make pie graph.
+     * @return pie graph.
+     */
     private Chart pieChartGraph(){
         PieChart chart = new PieChart(getContext());
         ArrayList<PieEntry> entries = new ArrayList<>();
@@ -226,6 +250,10 @@ public class ReportsFragment extends Fragment {
         return chart;
     }
 
+    /**
+     * resample the data from minutes to half of hours.
+     * @return list of data entries.
+     */
     private List<Entry> AdhdPerHalfHours(){
         ArrayList<Entry> entries = new ArrayList<>();
         float counter;
@@ -245,6 +273,11 @@ public class ReportsFragment extends Fragment {
         }
         return entries;
     }
+
+    /**
+     * create the line chart graph based on the data.
+     * @return chart object.
+     */
     private Chart lineChartGraph(){
         LineChart chart = new LineChart(getContext());
         List<Entry> entries = AdhdPerHalfHours();
@@ -266,6 +299,10 @@ public class ReportsFragment extends Fragment {
         chart.setExtraOffsets(10f, 10f, 10f, 10f);
         return chart;
     }
+
+    /**
+     * download from the webAPI the quiz answers.
+     */
     private void getAnswers(){
         WebServiceApi api = UserApi.getRetrofitInstance().create(WebServiceApi.class);
         String username = ModuleDB.getUserDetailsDB(getContext()).userDao().index().get(0).getUserName().toString();
@@ -283,6 +320,9 @@ public class ReportsFragment extends Fragment {
         });
     }
 
+    /**
+     * download from the webAPI the last tracking data.
+     */
     private void getLastData(){
         WebServiceApi api = UserApi.getRetrofitInstance().create(WebServiceApi.class);
         String username = ModuleDB.getUserDetailsDB(getContext()).userDao().index().get(0).getUserName().toString();
@@ -331,6 +371,11 @@ public class ReportsFragment extends Fragment {
         });
     }
 
+    /**
+     * design sketch of answered quiz and save it to the pdf file of the report.
+     * @param answers the answers, encoded.
+     * @param page the page pdf file.
+     */
     private void AddQuestions(List<QAUobjects> answers, PdfDocument.Page page){
         Canvas canvas2 = page.getCanvas();
 
@@ -399,6 +444,11 @@ public class ReportsFragment extends Fragment {
     }
     private PdfDocument document;
 
+    /**
+     * attach the chart object to the pdf file, print the answers in the format, and the maje an intent that create the pdf file.
+     * @param charts chart object.
+     * @param answers the answers to the quiz in the foramt.
+     */
     private void DownloadPDF(List<Chart> charts, List<QAUobjects> answers){
         int pages = charts.size()+1;
         document = new PdfDocument();

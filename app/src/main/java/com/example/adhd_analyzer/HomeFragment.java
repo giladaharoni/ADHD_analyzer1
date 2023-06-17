@@ -107,6 +107,10 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+    /**
+     * init the button of tracking. sets time handlers, color change etc.
+     * @param tracking the tracking button.
+     */
     private void initButton(Button tracking){
         if (isMyServiceRunning(SensorsRecordsService.class)){
             tracking.setText(R.string.stop_tracking);
@@ -139,6 +143,10 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    /**
+     * check for permission access to the location (GPS in background).
+     * if it doesn't have this, it open a system dialog for setting the permission.
+     */
     private void checkRequest() {
         if ((ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_BACKGROUND_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) && (ActivityCompat.checkSelfPermission(this.getContext()
@@ -170,6 +178,11 @@ public class HomeFragment extends Fragment {
     }
 
 
+    /***
+     * Check if the chosen serviceClass is running as  a background service.
+     * @param serviceClass the chosen class.
+     * @return true if it run.
+     */
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
